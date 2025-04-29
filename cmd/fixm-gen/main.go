@@ -1,65 +1,101 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
-
-	"aqwari.net/xml/xsdgen"
+	"strings"
 )
 
 func main() {
-	var (
-		schemaDir  = flag.String("schema", "./schemas/fixm/core", "Directory containing FIXM XSD files")
-		outputPath = flag.String("output", "./internal/fixm", "Output directory for generated code")
-		pkgName    = flag.String("package", "fixm", "Package name for generated code")
-	)
-	flag.Parse()
+	// Root schema directory
+	schemaDir := "./schemas/fixm/core"
+	// Use a completely new output directory
+	outputDir := "./internal/fixm_final"
 
-	// Create the output directory if it doesn't exist
-	if err := os.MkdirAll(*outputPath, 0755); err != nil {
-		log.Fatalf("Failed to create output directory: %v", err)
+	// Path to the local xgen binary
+	xgenPath := "./xgen/bin/xgen"
+
+	// Clean up any existing directory
+	os.RemoveAll(outputDir)
+
+	// Ensure output directory exists
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		fmt.Printf("Error creating output directory: %v\n", err)
+		return
 	}
 
-	// Configure the code generator
-	var cfg xsdgen.Config
-	cfg.Option(
-		xsdgen.PackageName(*pkgName),
-		xsdgen.HandleSOAPArrayType(),
-		xsdgen.LogOutput(log.New(os.Stderr, "", 0)),
-		xsdgen.LogLevel(3),
-		xsdgen.UseFieldNames(),
-	)
+	// Process the root schema first
+	rootSchema := filepath.Join(schemaDir, "Fixm.xsd")
+	processSchema(rootSchema, outputDir, xgenPath)
 
-	// Find all .xsd files in the schema directory
-	var xsdFiles []string
-	err := filepath.Walk(*schemaDir, func(path string, info os.FileInfo, err error) error {
+	// Process all other schemas
+	err := filepath.Walk(schemaDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && filepath.Ext(path) == ".xsd" {
-			xsdFiles = append(xsdFiles, path)
+		if !info.IsDir() && strings.HasSuffix(strings.ToLower(info.Name()), ".xsd") {
+			// Skip the root schema as we've already processed it
+			if path == rootSchema {
+				return nil
+			}
+
+			// Process each XSD file
+			processSchema(path, outputDir, xgenPath)
 		}
 		return nil
 	})
+
 	if err != nil {
-		log.Fatalf("Error walking schema directory: %v", err)
+		fmt.Printf("Error walking through schemas: %v\n", err)
 	}
 
-	// Generate code
-	fmt.Printf("Generating Go code from %d FIXM XSD files...\n", len(xsdFiles))
-	source, err := cfg.GenSource(xsdFiles...)
+	fmt.Println("Processing complete!")
+}
+
+func processSchema(schemaPath, outputDir, xgenPath string) {
+	// Get relative path to maintain package structure
+	relPath, err := filepath.Rel("./schemas/fixm/core", schemaPath)
 	if err != nil {
-		log.Fatalf("Error generating code: %v", err)
+		fmt.Printf("Error getting relative path for %s: %v\n", schemaPath, err)
+		return
 	}
 
-	// Write the generated code to a file
-	outputFile := filepath.Join(*outputPath, "fixm_gen.go")
-	if err := os.WriteFile(outputFile, source, 0644); err != nil {
-		log.Fatalf("Error writing output file: %v", err)
+	// Create output directory structure
+	outPath := filepath.Join(outputDir, filepath.Dir(relPath))
+	if err := os.MkdirAll(outPath, 0755); err != nil {
+		fmt.Printf("Error creating output directory %s: %v\n", outPath, err)
+		return
 	}
 
-	fmt.Printf("Successfully generated Go code at %s\n", outputFile)
+	// Generate unique output file name - add unique suffix
+	baseName := strings.TrimSuffix(filepath.Base(schemaPath), ".xsd")
+	safeName := strings.ReplaceAll(relPath, "/", "_")
+	safeName = strings.ReplaceAll(safeName, ".", "_")
+	outFile := filepath.Join(outPath, strings.ToLower(baseName)+"_"+safeName+".go")
+
+	// Generate package name from directory structure
+	pkgPath := filepath.Dir(relPath)
+	pkgName := "fixm"
+	if pkgPath != "." {
+		pkgName = strings.Replace(filepath.Base(pkgPath), "-", "", -1)
+	}
+
+	fmt.Printf("Processing %s -> %s (package: %s)\n", schemaPath, outFile, pkgName)
+
+	// Run xgen command using the local binary with correct capitalization
+	cmd := exec.Command(xgenPath,
+		"-l", "Go", // Use capitalized "Go"
+		"-i", schemaPath,
+		"-o", outFile,
+		"-p", pkgName)
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error generating code for %s: %v\n", schemaPath, err)
+		fmt.Println(string(output))
+	} else {
+		fmt.Printf("Successfully generated %s\n", outFile)
+	}
 }
