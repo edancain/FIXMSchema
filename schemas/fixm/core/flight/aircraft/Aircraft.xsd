@@ -83,7 +83,7 @@ Details on the FIXM CCB and a list of its members is available on request from F
 	</xs:simpleType>
 	<xs:simpleType name="WakeTurbulenceCategoryType">
 		<xs:annotation>
-			<xs:documentation>ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM}</xs:documentation>
+			<xs:documentation>ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="H">
@@ -154,7 +154,7 @@ c) where applicable, authorization from the appropriate authority.
 			</xs:element>
 			<xs:element name="wakeTurbulence" type="fx:WakeTurbulenceCategoryType" minOccurs="0" maxOccurs="1" nillable="true">
 				<xs:annotation>
-					<xs:documentation>ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM}</xs:documentation>
+					<xs:documentation>ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
