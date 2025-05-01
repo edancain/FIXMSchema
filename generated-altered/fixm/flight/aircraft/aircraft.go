@@ -21,20 +21,20 @@ type WakeTurbulenceCategoryType string
 
 // AircraftType is Aircraft enabling the flight. [FIXM]
 type AircraftType struct {
-	AircraftAddress	interface{}	`xml:"aircraftAddress"`
-	AircraftApproachCategory	string	`xml:"aircraftApproachCategory"`
-	AircraftType	[]interface{}	`xml:"aircraftType"`
-	Capabilities	interface{}	`xml:"capabilities"`
-	ColoursAndMarkings	*base.CharacterStringType	`xml:"coloursAndMarkings"`
-	Extension	[]base*AircraftExtensionType	`xml:"extension"`
-	Registration	interface{}	`xml:"registration"`
-	WakeTurbulence	string	`xml:"wakeTurbulence"`
+	AircraftAddress          interface{}                   `xml:"aircraftAddress"`
+	AircraftApproachCategory string                        `xml:"aircraftApproachCategory"`
+	AircraftType             []interface{}                 `xml:"aircraftType"`
+	Capabilities             interface{}                   `xml:"capabilities"`
+	ColoursAndMarkings       *base.CharacterStringType     `xml:"coloursAndMarkings"`
+	Extension                []*base.AircraftExtensionType `xml:"extension"`
+	Registration             interface{}                   `xml:"registration"`
+	WakeTurbulence           string                        `xml:"wakeTurbulence"`
 }
 
 // AircraftTypeType ...
 type AircraftTypeType struct {
-	AircraftCount	*base.ountPositiveType	`xml:"aircraftCount"`
-	Extension	[]*base.AircraftTypeExtensionType	`xml:"extension"`
-	IcaoAircraftTypeDesignator	*base.AircraftTypeDesignatorType	`xml:"icaoAircraftTypeDesignator"`
-	OtherAircraftType	*base.CharacterStringType	`xml:"otherAircraftType"`
+	AircraftCount              *base.CountPositiveType           `xml:"aircraftCount"`
+	Extension                  []*base.AircraftTypeExtensionType `xml:"extension"`
+	IcaoAircraftTypeDesignator *base.AircraftTypeDesignatorType  `xml:"icaoAircraftTypeDesignator"`
+	OtherAircraftType          *base.CharacterStringType         `xml:"otherAircraftType"`
 }

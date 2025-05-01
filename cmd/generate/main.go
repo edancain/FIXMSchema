@@ -10,197 +10,164 @@ import (
 )
 
 func main() {
-	// Create output directory structure
+	// Configuration
 	baseDir := "generated/fixm"
+	schemaRoot := "schemas/fixm/core"
+
+	// Clean up existing directory
+	os.RemoveAll(baseDir)
+
+	// Find xgen path
+	xgenPath, err := exec.LookPath("xgen")
+	if err != nil {
+		log.Fatalf("Error finding xgen: %v", err)
+	}
+	fmt.Printf("Using xgen at: %s\n", xgenPath)
+
+	// Create directories
 	os.MkdirAll(filepath.Join(baseDir, "base"), 0755)
 	os.MkdirAll(filepath.Join(baseDir, "flight"), 0755)
 
 	// Create flight subdirectories
-	flightSubdirs := []string{
+	subdirs := []string{
 		"aircraft", "arrival", "capability", "cargo", "departure",
 		"emergency", "enroute", "flightdata", "flightroutetrajectory",
 	}
 
-	for _, dir := range flightSubdirs {
-		os.MkdirAll(filepath.Join(baseDir, "flight", dir), 0755)
+	for _, subdir := range subdirs {
+		os.MkdirAll(filepath.Join(baseDir, "flight", subdir), 0755)
 	}
 
-	// Find the path to the xgen executable
-	xgenPath, err := exec.LookPath("xgen")
-	if err != nil {
-		log.Fatalf("xgen not found in PATH: %v", err)
-	}
-
-	fmt.Printf("Using xgen at: %s\n", xgenPath)
-
-	// Process base schemas
-	fmt.Println("Processing base schemas...")
-	baseFiles, err := filepath.Glob("schemas/fixm/core/base/*.xsd")
-	if err != nil {
-		log.Fatalf("Error finding base schemas: %v", err)
-	}
-
+	// Process base directory
+	fmt.Println("=== Processing base directory ===")
+	baseFiles, _ := filepath.Glob(filepath.Join(schemaRoot, "base", "*.xsd"))
 	for _, file := range baseFiles {
-		baseName := filepath.Base(file)
-		fmt.Printf("  Processing %s...\n", baseName)
+		processXsdFile(xgenPath, file, filepath.Join(baseDir, "base"), "base")
+	}
 
-		cmd := exec.Command(xgenPath,
-			"-i", file,
-			"-o", filepath.Join(baseDir, "base"),
-			"-l", "Go",
-			"-p", "base")
+	// Process flight directory
+	fmt.Println("\n=== Processing flight directory ===")
+	flightFile := filepath.Join(schemaRoot, "flight", "Flight.xsd")
+	processXsdFile(xgenPath, flightFile, filepath.Join(baseDir, "flight"), "flight")
 
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-
-		if err := cmd.Run(); err != nil {
-			log.Printf("Warning: Issue processing %s: %v", file, err)
+	// Process flight subdirectories
+	for _, subdir := range subdirs {
+		fmt.Printf("\n=== Processing %s subdirectory ===\n", subdir)
+		subdirFiles, _ := filepath.Glob(filepath.Join(schemaRoot, "flight", subdir, "*.xsd"))
+		for _, file := range subdirFiles {
+			processXsdFile(xgenPath, file, filepath.Join(baseDir, "flight", subdir), subdir)
 		}
 	}
 
-	// Process Flight.xsd
-	fmt.Println("Processing Flight.xsd...")
-	flightCmd := exec.Command(xgenPath,
-		"-i", "schemas/fixm/core/flight/Flight.xsd",
-		"-o", filepath.Join(baseDir, "flight"),
-		"-l", "Go",
-		"-p", "flight")
+	// Cleanup schema directories
+	cleanupSchemaDirectories(baseDir)
 
-	flightCmd.Stdout = os.Stdout
-	flightCmd.Stderr = os.Stderr
-
-	if err := flightCmd.Run(); err != nil {
-		log.Printf("Warning: Issue processing Flight.xsd: %v", err)
-	}
-
-	// Process flight subdirectory schemas
-	fmt.Println("Processing flight subdirectory schemas...")
-
-	for _, subdir := range flightSubdirs {
-		subdirPath := filepath.Join("schemas/fixm/core/flight", subdir)
-		files, err := filepath.Glob(filepath.Join(subdirPath, "*.xsd"))
-		if err != nil {
-			log.Printf("Warning: Error finding schemas in %s: %v", subdirPath, err)
-			continue
-		}
-
-		for _, file := range files {
-			baseName := filepath.Base(file)
-			fmt.Printf("  Processing %s/%s...\n", subdir, baseName)
-
-			cmd := exec.Command(xgenPath,
-				"-i", file,
-				"-o", filepath.Join(baseDir, "flight", subdir),
-				"-l", "Go",
-				"-p", fmt.Sprintf("flight/%s", subdir))
-
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-
-			if err := cmd.Run(); err != nil {
-				log.Printf("Warning: Issue processing %s: %v", file, err)
-			}
-		}
-	}
-
-	// Process root Fixm.xsd
-	fmt.Println("Processing root Fixm.xsd...")
-	rootCmd := exec.Command(xgenPath,
-		"-i", "schemas/fixm/core/Fixm.xsd",
-		"-o", baseDir,
-		"-l", "Go",
-		"-p", "fixm")
-
-	rootCmd.Stdout = os.Stdout
-	rootCmd.Stderr = os.Stderr
-
-	if err := rootCmd.Run(); err != nil {
-		log.Printf("Warning: Issue processing Fixm.xsd: %v", err)
-	}
-
-	// Fix import references and packages
-	fmt.Println("Fixing import references...")
-
-	err = filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if !info.IsDir() && strings.HasSuffix(path, ".go") {
-			fixGoFile(path)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("Warning: Error fixing import references: %v", err)
-	}
-
-	// Remove unwanted Base.xsd.go files in subdirectories
-	fmt.Println("Cleaning up unwanted files...")
-
-	err = filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		// Remove Base.xsd.go files in schemas subdirectories
-		if !info.IsDir() &&
-			strings.HasSuffix(path, "Base.xsd.go") &&
-			strings.Contains(path, "schemas") {
-			os.Remove(path)
-			fmt.Printf("  Removed %s\n", path)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("Warning: Error cleaning up files: %v", err)
-	}
-
-	// Create fixm.go in root directory to import all packages
-	fmt.Println("Creating fixm.go in root directory...")
-
-	fixmContent := `package fixm
-
-import (
-	_ "github.com/yourusername/fixm/generated/fixm/base"
-	_ "github.com/yourusername/fixm/generated/fixm/flight"
-)
-`
-
-	err = os.WriteFile(filepath.Join(baseDir, "fixm.go"), []byte(fixmContent), 0644)
-	if err != nil {
-		log.Printf("Warning: Error creating fixm.go: %v", err)
-	}
-
-	fmt.Println("Code generation completed")
+	fmt.Println("\nCode generation completed successfully!")
 }
 
-func fixGoFile(filePath string) {
-	// Read the file
+func processXsdFile(xgenPath, xsdFile, outputDir, packageName string) {
+	// Get base name and output name
+	baseName := filepath.Base(xsdFile)
+	outputName := strings.ToLower(strings.TrimSuffix(baseName, ".xsd")) + ".go"
+	outputPath := filepath.Join(outputDir, outputName)
+
+	fmt.Printf("Processing %s -> %s\n", baseName, outputPath)
+
+	// Run xgen with -p (package) flag directly to the output directory
+	cmd := exec.Command(xgenPath,
+		"-i", xsdFile,
+		"-o", outputDir,
+		"-l", "Go",
+		"-p", packageName)
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("  Error running xgen: %v\n%s\n", err, output)
+
+		// Create simple placeholder file with just package declaration
+		createPlaceholderFile(outputPath, packageName, baseName)
+		return
+	}
+
+	// Check if the file was created as expected
+	generatedFile := filepath.Join(outputDir, baseName+".go")
+	if _, err := os.Stat(generatedFile); err == nil {
+		// If file is generated with original name, rename it to lowercase
+		if generatedFile != outputPath {
+			os.Rename(generatedFile, outputPath)
+		}
+
+		// Fix package and interface references
+		fixGoFile(outputPath, packageName)
+		fmt.Printf("  Successfully generated %s\n", outputPath)
+	} else {
+		// If no file was generated, look for files in schemas directory
+		schemasDir := filepath.Join(outputDir, "schemas")
+		if _, err := os.Stat(schemasDir); err == nil {
+			// Find any generated files
+			var foundFiles []string
+			filepath.Walk(schemasDir, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				if !info.IsDir() && strings.HasSuffix(path, ".go") {
+					foundFiles = append(foundFiles, path)
+				}
+				return nil
+			})
+
+			if len(foundFiles) > 0 {
+				// Copy the first found file and fix it
+				copyAndFixFile(foundFiles[0], outputPath, packageName)
+				fmt.Printf("  Generated from schemas dir: %s\n", outputPath)
+			} else {
+				// Create placeholder if no files found
+				fmt.Printf("  No output files found\n")
+				createPlaceholderFile(outputPath, packageName, baseName)
+			}
+		} else {
+			// Create placeholder if no schemas directory
+			fmt.Printf("  No output files and no schemas directory found\n")
+			createPlaceholderFile(outputPath, packageName, baseName)
+		}
+	}
+}
+
+func fixGoFile(filePath, packageName string) {
+	// Read file
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Printf("Warning: Could not read file %s: %v", filePath, err)
+		fmt.Printf("  Error reading file %s: %v\n", filePath, err)
 		return
 	}
 
 	contentStr := string(content)
 
 	// Fix package declaration
-	relPath, err := filepath.Rel("generated/fixm", filePath)
+	if !strings.Contains(contentStr, "package "+packageName) {
+		contentStr = strings.Replace(contentStr, "package schema", "package "+packageName, -1)
+	}
+
+	// Fix interface references
+	contentStr = strings.Replace(contentStr, "*Interface{}", "interface{}", -1)
+	contentStr = strings.Replace(contentStr, "[]*Interface{}", "[]interface{}", -1)
+
+	// Write back
+	err = os.WriteFile(filePath, []byte(contentStr), 0644)
 	if err != nil {
-		log.Printf("Warning: Could not get relative path for %s: %v", filePath, err)
+		fmt.Printf("  Error writing file %s: %v\n", filePath, err)
+	}
+}
+
+func copyAndFixFile(sourcePath, destPath, packageName string) {
+	// Read source file
+	content, err := os.ReadFile(sourcePath)
+	if err != nil {
+		fmt.Printf("  Error reading source file %s: %v\n", sourcePath, err)
 		return
 	}
 
-	packagePath := filepath.Dir(relPath)
-	packageName := strings.Replace(packagePath, "/", "_", -1)
-	if packageName == "." {
-		packageName = "fixm"
-	}
+	contentStr := string(content)
 
 	// Fix package declaration
 	contentStr = strings.Replace(contentStr, "package schema", "package "+packageName, -1)
@@ -209,33 +176,37 @@ func fixGoFile(filePath string) {
 	contentStr = strings.Replace(contentStr, "*Interface{}", "interface{}", -1)
 	contentStr = strings.Replace(contentStr, "[]*Interface{}", "[]interface{}", -1)
 
-	// Add imports for base types if needed
-	if strings.Contains(contentStr, "CharacterStringType") ||
-		strings.Contains(contentStr, "CountPositiveType") ||
-		strings.Contains(contentStr, "AircraftExtensionType") {
-		importStr := `
-import (
-	"github.com/yourusername/fixm/generated/fixm/base"
-)
-`
-		// Add import after package declaration
-		lines := strings.Split(contentStr, "\n")
-		contentStr = lines[0] + "\n" + importStr + strings.Join(lines[1:], "\n")
-
-		// Fix references to base types
-		contentStr = strings.Replace(contentStr, "CharacterStringType", "base.CharacterStringType", -1)
-		contentStr = strings.Replace(contentStr, "CountPositiveType", "base.CountPositiveType", -1)
-		contentStr = strings.Replace(contentStr, "AircraftExtensionType", "base.AircraftExtensionType", -1)
-		contentStr = strings.Replace(contentStr, "AircraftTypeExtensionType", "base.AircraftTypeExtensionType", -1)
-		contentStr = strings.Replace(contentStr, "AircraftTypeDesignatorType", "base.AircraftTypeDesignatorType", -1)
-	}
-
-	// Write the fixed content back
-	err = os.WriteFile(filePath, []byte(contentStr), 0644)
+	// Write to destination
+	err = os.WriteFile(destPath, []byte(contentStr), 0644)
 	if err != nil {
-		log.Printf("Warning: Could not write fixed file %s: %v", filePath, err)
-		return
+		fmt.Printf("  Error writing destination file %s: %v\n", destPath, err)
 	}
+}
 
-	fmt.Printf("  Fixed %s\n", filePath)
+func createPlaceholderFile(filePath, packageName, xsdFileName string) {
+	content := fmt.Sprintf("// Generated from %s\npackage %s\n", xsdFileName, packageName)
+	err := os.WriteFile(filePath, []byte(content), 0644)
+	if err != nil {
+		fmt.Printf("  Error creating placeholder file %s: %v\n", filePath, err)
+	} else {
+		fmt.Printf("  Created placeholder file: %s\n", filePath)
+	}
+}
+
+func cleanupSchemaDirectories(rootDir string) {
+	fmt.Println("\n=== Cleaning up unwanted schemas directories ===")
+
+	filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() && filepath.Base(path) == "schemas" {
+			fmt.Printf("Removing directory: %s\n", path)
+			os.RemoveAll(path)
+			return filepath.SkipDir
+		}
+
+		return nil
+	})
 }
