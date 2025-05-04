@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fx:Flight xmlns:fx="http://www.fixm.aero/flight/4.2" xmlns:fb="http://www.fixm.aero/base/4.2">
+  <fx:departure>
+    <fx:actualTimeOfDeparture>2020-01-01T00:03:00Z</fx:actualTimeOfDeparture>
+    <fx:aerodrome>
+      <fb:locationIndicator>KBOS</fb:locationIndicator>
+    </fx:aerodrome>
+  </fx:departure>
+  <fx:flightIdentification>
+    <fx:aircraftIdentification>ABC1234</fx:aircraftIdentification>
+  </fx:flightIdentification>
+  <fx:gufi codeSpace="urn:uuid">3e7f6a63-6c3b-4f0f-844b-4b84338ed103</fx:gufi>
+</fx:Flight>

@@ -696,12 +696,12 @@ Details on the FIXM CCB and a list of its members is available on request from F
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="FlightCapabilitiesType">
-		<xs:annotation>
+    	<xs:annotation>
 			<xs:documentation>The capabilities of the flight comprising of the:
-a) presence of relevant serviceable equipment on board the aircraft;
-b) equipment and capabilities commensurate with flight crew qualifications; and
-c) where applicable, authorization from the appropriate authority.
-[FIXM]</xs:documentation>
+			a) presence of relevant serviceable equipment on board the aircraft;
+			b) equipment and capabilities commensurate with flight crew qualifications; and
+			c) where applicable, authorization from the appropriate authority.
+			[FIXM]</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="communication" type="fx:CommunicationCapabilitiesType" minOccurs="0" maxOccurs="1" nillable="true">

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmg:ExampleMessage xsi:type="xmg:ExampleDA_ExampleMessageType" xmlns:xmg="http://www.fixm.aero/app/example/1.0" xmlns:fb="http://www.fixm.aero/base/4.2" xmlns:fx="http://www.fixm.aero/flight/4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xmg:flight>
+    <fx:departure>
+      <fx:actualTimeOfDeparture>1903-12-17T03:35:00Z</fx:actualTimeOfDeparture>
+      <fx:aerodrome>
+        <fb:name>KILL DEVIL HILL</fb:name>
+        <fb:referencePoint srsName="urn:ogc:def:crs:EPSG::4326">
+          <fb:pos>36.019970 -75.668760</fb:pos>
+        </fb:referencePoint>
+      </fx:aerodrome>
+    </fx:departure>
+    <fx:flightIdentification>
+      <fx:aircraftIdentification>WRF01</fx:aircraftIdentification>
+    </fx:flightIdentification>
+    <fx:gufi codeSpace="urn:uuid">18611e54-52b8-4fb5-a2fa-12173b1d39db</fx:gufi>
+  </xmg:flight>
+  <xmg:recipient>
+    <fb:name>HISTORY</fb:name>
+  </xmg:recipient>
+  <xmg:sender>
+    <fb:name>ORVILLE WRIGHT</fb:name>
+  </xmg:sender>
+  <xmg:timestamp>2020-01-15T17:20:33Z</xmg:timestamp>
+  <xmg:type>DEPARTURE</xmg:type>
+</xmg:ExampleMessage>

@@ -1,212 +1,388 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
-	"log"
+	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
+	"unicode"
 )
+
+// XSD parsing structures
+type XSDSchema struct {
+	XMLName      xml.Name         `xml:"schema"`
+	Namespace    string           `xml:"targetNamespace,attr"`
+	SimpleTypes  []XSDSimpleType  `xml:"simpleType"`
+	ComplexTypes []XSDComplexType `xml:"complexType"`
+	Elements     []XSDElement     `xml:"element"`
+	Imports      []XSDImport      `xml:"import"`
+	Includes     []XSDInclude     `xml:"include"`
+}
+
+type XSDImport struct {
+	Namespace      string `xml:"namespace,attr"`
+	SchemaLocation string `xml:"schemaLocation,attr"`
+}
+
+type XSDInclude struct {
+	SchemaLocation string `xml:"schemaLocation,attr"`
+}
+
+type XSDSimpleType struct {
+	Name        string         `xml:"name,attr"`
+	Restriction XSDRestriction `xml:"restriction"`
+	List        XSDList        `xml:"list"`
+	Annotation  XSDAnnotation  `xml:"annotation"`
+}
+
+type XSDList struct {
+	ItemType string `xml:"itemType,attr"`
+}
+
+type XSDRestriction struct {
+	Base         string           `xml:"base,attr"`
+	Enumerations []XSDEnumeration `xml:"enumeration"`
+	Pattern      XSDPattern       `xml:"pattern"`
+}
+
+type XSDPattern struct {
+	Value string `xml:"value,attr"`
+}
+
+type XSDEnumeration struct {
+	Value      string        `xml:"value,attr"`
+	Annotation XSDAnnotation `xml:"annotation"`
+}
+
+type XSDComplexType struct {
+	Name       string        `xml:"name,attr"`
+	Sequence   XSDSequence   `xml:"sequence"`
+	Choice     XSDChoice     `xml:"choice"`
+	Annotation XSDAnnotation `xml:"annotation"`
+}
+
+type XSDChoice struct {
+	Elements []XSDElement `xml:"element"`
+}
+
+type XSDSequence struct {
+	Elements []XSDElement `xml:"element"`
+	Choice   XSDChoice    `xml:"choice"`
+}
+
+type XSDElement struct {
+	Name       string        `xml:"name,attr"`
+	Type       string        `xml:"type,attr"`
+	MinOccurs  string        `xml:"minOccurs,attr"`
+	MaxOccurs  string        `xml:"maxOccurs,attr"`
+	Nillable   string        `xml:"nillable,attr"`
+	Annotation XSDAnnotation `xml:"annotation"`
+}
+
+type XSDAnnotation struct {
+	Documentation string `xml:"documentation"`
+}
+
+// Namespaces map
+var namespaces = map[string]string{
+	"http://www.fixm.aero/base/4.3":   "base",
+	"http://www.fixm.aero/flight/4.3": "flight",
+}
 
 func main() {
 	// Configuration
-	baseDir := "generated/fixm"
 	schemaRoot := "schemas/fixm/core"
+	outputDir := "generated/fixm"
+
+	fmt.Println("Starting FIXM Go code generator...")
 
 	// Clean up existing directory
-	os.RemoveAll(baseDir)
+	os.RemoveAll(outputDir)
+	os.MkdirAll(outputDir, 0755)
 
-	// Find xgen path
-	xgenPath, err := exec.LookPath("xgen")
-	if err != nil {
-		log.Fatalf("Error finding xgen: %v", err)
-	}
-	fmt.Printf("Using xgen at: %s\n", xgenPath)
+	// Create base directory
+	os.MkdirAll(filepath.Join(outputDir, "base"), 0755)
 
-	// Create directories
-	os.MkdirAll(filepath.Join(baseDir, "base"), 0755)
-	os.MkdirAll(filepath.Join(baseDir, "flight"), 0755)
-
-	// Create flight subdirectories
-	subdirs := []string{
-		"aircraft", "arrival", "capability", "cargo", "departure",
-		"emergency", "enroute", "flightdata", "flightroutetrajectory",
+	// Process base XSD files
+	baseDir := filepath.Join(schemaRoot, "base")
+	baseFiles, _ := filepath.Glob(filepath.Join(baseDir, "*.xsd"))
+	for _, xsdFile := range baseFiles {
+		processXSDFile(xsdFile, filepath.Join(outputDir, "base"), "base")
 	}
 
-	for _, subdir := range subdirs {
-		os.MkdirAll(filepath.Join(baseDir, "flight", subdir), 0755)
-	}
+	// Create flight directory and subdirectories
+	flightDir := filepath.Join(outputDir, "flight")
+	os.MkdirAll(flightDir, 0755)
 
-	// Process base directory
-	fmt.Println("=== Processing base directory ===")
-	baseFiles, _ := filepath.Glob(filepath.Join(schemaRoot, "base", "*.xsd"))
-	for _, file := range baseFiles {
-		processXsdFile(xgenPath, file, filepath.Join(baseDir, "base"), "base")
-	}
-
-	// Process flight directory
-	fmt.Println("\n=== Processing flight directory ===")
-	flightFile := filepath.Join(schemaRoot, "flight", "Flight.xsd")
-	processXsdFile(xgenPath, flightFile, filepath.Join(baseDir, "flight"), "flight")
+	// Process Flight.xsd
+	flightXsd := filepath.Join(schemaRoot, "flight", "Flight.xsd")
+	processXSDFile(flightXsd, flightDir, "flight")
 
 	// Process flight subdirectories
-	for _, subdir := range subdirs {
-		fmt.Printf("\n=== Processing %s subdirectory ===\n", subdir)
-		subdirFiles, _ := filepath.Glob(filepath.Join(schemaRoot, "flight", subdir, "*.xsd"))
-		for _, file := range subdirFiles {
-			processXsdFile(xgenPath, file, filepath.Join(baseDir, "flight", subdir), subdir)
-		}
-	}
+	flightSubdirs, _ := filepath.Glob(filepath.Join(schemaRoot, "flight", "*"))
+	for _, subdirPath := range flightSubdirs {
+		info, err := os.Stat(subdirPath)
+		if err == nil && info.IsDir() {
+			subdir := filepath.Base(subdirPath)
+			subOutputDir := filepath.Join(flightDir, subdir)
+			os.MkdirAll(subOutputDir, 0755)
 
-	// Cleanup schema directories
-	cleanupSchemaDirectories(baseDir)
-
-	fmt.Println("\nCode generation completed successfully!")
-}
-
-func processXsdFile(xgenPath, xsdFile, outputDir, packageName string) {
-	// Get base name and output name
-	baseName := filepath.Base(xsdFile)
-	outputName := strings.ToLower(strings.TrimSuffix(baseName, ".xsd")) + ".go"
-	outputPath := filepath.Join(outputDir, outputName)
-
-	fmt.Printf("Processing %s -> %s\n", baseName, outputPath)
-
-	// Run xgen with -p (package) flag directly to the output directory
-	cmd := exec.Command(xgenPath,
-		"-i", xsdFile,
-		"-o", outputDir,
-		"-l", "Go",
-		"-p", packageName)
-
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("  Error running xgen: %v\n%s\n", err, output)
-
-		// Create simple placeholder file with just package declaration
-		createPlaceholderFile(outputPath, packageName, baseName)
-		return
-	}
-
-	// Check if the file was created as expected
-	generatedFile := filepath.Join(outputDir, baseName+".go")
-	if _, err := os.Stat(generatedFile); err == nil {
-		// If file is generated with original name, rename it to lowercase
-		if generatedFile != outputPath {
-			os.Rename(generatedFile, outputPath)
-		}
-
-		// Fix package and interface references
-		fixGoFile(outputPath, packageName)
-		fmt.Printf("  Successfully generated %s\n", outputPath)
-	} else {
-		// If no file was generated, look for files in schemas directory
-		schemasDir := filepath.Join(outputDir, "schemas")
-		if _, err := os.Stat(schemasDir); err == nil {
-			// Find any generated files
-			var foundFiles []string
-			filepath.Walk(schemasDir, func(path string, info os.FileInfo, err error) error {
-				if err != nil {
-					return err
-				}
-				if !info.IsDir() && strings.HasSuffix(path, ".go") {
-					foundFiles = append(foundFiles, path)
-				}
-				return nil
-			})
-
-			if len(foundFiles) > 0 {
-				// Copy the first found file and fix it
-				copyAndFixFile(foundFiles[0], outputPath, packageName)
-				fmt.Printf("  Generated from schemas dir: %s\n", outputPath)
-			} else {
-				// Create placeholder if no files found
-				fmt.Printf("  No output files found\n")
-				createPlaceholderFile(outputPath, packageName, baseName)
+			// Process XSD files in subdirectory
+			xsdFiles, _ := filepath.Glob(filepath.Join(subdirPath, "*.xsd"))
+			for _, xsdFile := range xsdFiles {
+				processXSDFile(xsdFile, subOutputDir, subdir)
 			}
-		} else {
-			// Create placeholder if no schemas directory
-			fmt.Printf("  No output files and no schemas directory found\n")
-			createPlaceholderFile(outputPath, packageName, baseName)
 		}
 	}
+
+	fmt.Println("FIXM Go code generation completed successfully!")
 }
 
-func fixGoFile(filePath, packageName string) {
-	// Read file
-	content, err := os.ReadFile(filePath)
+func processXSDFile(xsdFile, outputDir, packageName string) {
+	fmt.Printf("Processing %s -> %s (package: %s)\n", filepath.Base(xsdFile), outputDir, packageName)
+
+	// Read XSD content
+	content, err := ioutil.ReadFile(xsdFile)
 	if err != nil {
-		fmt.Printf("  Error reading file %s: %v\n", filePath, err)
+		fmt.Printf("Error reading file: %v\n", err)
 		return
 	}
 
-	contentStr := string(content)
-
-	// Fix package declaration
-	if !strings.Contains(contentStr, "package "+packageName) {
-		contentStr = strings.Replace(contentStr, "package schema", "package "+packageName, -1)
-	}
-
-	// Fix interface references
-	contentStr = strings.Replace(contentStr, "*Interface{}", "interface{}", -1)
-	contentStr = strings.Replace(contentStr, "[]*Interface{}", "[]interface{}", -1)
-
-	// Write back
-	err = os.WriteFile(filePath, []byte(contentStr), 0644)
+	// Parse XSD
+	var schema XSDSchema
+	err = xml.Unmarshal(content, &schema)
 	if err != nil {
-		fmt.Printf("  Error writing file %s: %v\n", filePath, err)
-	}
-}
-
-func copyAndFixFile(sourcePath, destPath, packageName string) {
-	// Read source file
-	content, err := os.ReadFile(sourcePath)
-	if err != nil {
-		fmt.Printf("  Error reading source file %s: %v\n", sourcePath, err)
+		fmt.Printf("Error parsing XSD: %v\n", err)
 		return
 	}
 
-	contentStr := string(content)
+	// Generate Go code
+	outputFile := filepath.Join(outputDir, strings.ToLower(filepath.Base(xsdFile))+".go")
+	outputFile = strings.Replace(outputFile, ".xsd.go", ".go", 1)
 
-	// Fix package declaration
-	contentStr = strings.Replace(contentStr, "package schema", "package "+packageName, -1)
+	var goCode strings.Builder
+	goCode.WriteString(fmt.Sprintf("// Code generated from %s; DO NOT EDIT.\n\n", filepath.Base(xsdFile)))
+	goCode.WriteString(fmt.Sprintf("package %s\n\n", packageName))
 
-	// Fix interface references
-	contentStr = strings.Replace(contentStr, "*Interface{}", "interface{}", -1)
-	contentStr = strings.Replace(contentStr, "[]*Interface{}", "[]interface{}", -1)
+	// Add imports based on the XSD imports and includes
+	needsImport := (len(schema.Imports) > 0 || packageName != "base")
 
-	// Write to destination
-	err = os.WriteFile(destPath, []byte(contentStr), 0644)
+	if needsImport {
+		goCode.WriteString("import (\n")
+		if packageName != "base" {
+			goCode.WriteString("\t\"github.com/edancain/FIXMSchema.git/generated/fixm/base\"\n")
+		}
+		// Add other imports if needed
+		goCode.WriteString(")\n\n")
+	}
+
+	// Process simple types
+	for _, simpleType := range schema.SimpleTypes {
+		if simpleType.Name == "" {
+			continue
+		}
+
+		goTypeName := simpleType.Name
+
+		// Add documentation comment if available
+		if simpleType.Annotation.Documentation != "" {
+			doc := formatDocComment(simpleType.Annotation.Documentation)
+			goCode.WriteString(fmt.Sprintf("// %s\n", doc))
+		}
+
+		// Process list types
+		if simpleType.List.ItemType != "" {
+			itemType := resolveType(simpleType.List.ItemType, packageName)
+			goCode.WriteString(fmt.Sprintf("type %s []%s\n\n", goTypeName, itemType))
+			continue
+		}
+
+		// Process restriction types
+		if simpleType.Restriction.Base != "" {
+			baseType := resolveType(simpleType.Restriction.Base, packageName)
+
+			// Handle enumerations differently - they become string constants
+			if len(simpleType.Restriction.Enumerations) > 0 {
+				goCode.WriteString(fmt.Sprintf("type %s %s\n\n", goTypeName, baseType))
+
+				// Add constants for each enumeration value
+				goCode.WriteString(fmt.Sprintf("const (\n"))
+				for _, enum := range simpleType.Restriction.Enumerations {
+					constName := fmt.Sprintf("%s%s", goTypeName, toTitleCase(enum.Value))
+					goCode.WriteString(fmt.Sprintf("\t%s %s = \"%s\"\n", constName, goTypeName, enum.Value))
+				}
+				goCode.WriteString(")\n\n")
+			} else {
+				// For pattern-based restrictions, just use the base type
+				goCode.WriteString(fmt.Sprintf("type %s %s\n\n", goTypeName, baseType))
+			}
+		}
+	}
+
+	// Process complex types
+	for _, complexType := range schema.ComplexTypes {
+		if complexType.Name == "" {
+			continue
+		}
+
+		goTypeName := complexType.Name
+
+		// Add documentation comment if available
+		if complexType.Annotation.Documentation != "" {
+			doc := formatDocComment(complexType.Annotation.Documentation)
+			goCode.WriteString(fmt.Sprintf("// %s\n", doc))
+		}
+
+		// Begin struct definition
+		goCode.WriteString(fmt.Sprintf("type %s struct {\n", goTypeName))
+
+		// Process sequence elements
+		for _, elem := range complexType.Sequence.Elements {
+			processElement(&goCode, elem, packageName)
+		}
+
+		// Process choice elements
+		for _, elem := range complexType.Sequence.Choice.Elements {
+			processElement(&goCode, elem, packageName)
+		}
+
+		// Process direct choice elements
+		for _, elem := range complexType.Choice.Elements {
+			processElement(&goCode, elem, packageName)
+		}
+
+		// End struct definition
+		goCode.WriteString("}\n\n")
+	}
+
+	// Process elements
+	for _, elem := range schema.Elements {
+		if elem.Type != "" && elem.Name != "" {
+			// Add documentation comment if available
+			if elem.Annotation.Documentation != "" {
+				doc := formatDocComment(elem.Annotation.Documentation)
+				goCode.WriteString(fmt.Sprintf("// %s\n", doc))
+			}
+
+			goType := resolveType(elem.Type, packageName)
+			goCode.WriteString(fmt.Sprintf("var %s %s\n\n", toTitleCase(elem.Name), goType))
+		}
+	}
+
+	// Write output file
+	err = ioutil.WriteFile(outputFile, []byte(goCode.String()), 0644)
 	if err != nil {
-		fmt.Printf("  Error writing destination file %s: %v\n", destPath, err)
+		fmt.Printf("Error writing output file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("Successfully generated %s\n", outputFile)
+}
+
+func processElement(sb *strings.Builder, elem XSDElement, packageName string) {
+	if elem.Name == "" || elem.Type == "" {
+		return
+	}
+
+	// Convert element name to Go field name
+	fieldName := toTitleCase(elem.Name)
+
+	// Resolve element type to Go type
+	goType := resolveType(elem.Type, packageName)
+
+	// Determine if field is a slice
+	isSlice := (elem.MaxOccurs == "unbounded" || elem.MaxOccurs > "1")
+	if isSlice {
+		goType = "[]" + goType
+	}
+
+	// Determine if field is a pointer
+	isPointer := (elem.MinOccurs == "0" || elem.Nillable == "true")
+	if isPointer && !isSlice {
+		goType = "*" + goType
+	}
+
+	// Add documentation comment if available
+	if elem.Annotation.Documentation != "" {
+		doc := formatDocComment(elem.Annotation.Documentation)
+		sb.WriteString(fmt.Sprintf("\t// %s\n", doc))
+	}
+
+	// Add field with XML tag
+	sb.WriteString(fmt.Sprintf("\t%s %s `xml:\"%s\"`\n", fieldName, goType, elem.Name))
+}
+
+func resolveType(xsdType, packageName string) string {
+	// Handle namespaced types
+	if strings.Contains(xsdType, ":") {
+		parts := strings.Split(xsdType, ":")
+		ns := parts[0]
+		typeName := parts[1]
+
+		// Map namespace prefix to package
+		if ns == "fb" {
+			if packageName == "base" {
+				return typeName
+			}
+			return "base." + typeName
+		} else if ns == "fx" {
+			if packageName == "flight" {
+				return typeName
+			}
+			return "flight." + typeName
+		}
+
+		return typeName
+	}
+
+	// Handle XSD built-in types
+	switch xsdType {
+	case "xs:string":
+		return "string"
+	case "xs:int", "xs:integer":
+		return "int"
+	case "xs:boolean":
+		return "bool"
+	case "xs:decimal", "xs:double", "xs:float":
+		return "float64"
+	case "xs:date", "xs:dateTime", "xs:time":
+		return "string" // Or use time.Time with custom XML unmarshal
+	default:
+		return xsdType
 	}
 }
 
-func createPlaceholderFile(filePath, packageName, xsdFileName string) {
-	content := fmt.Sprintf("// Generated from %s\npackage %s\n", xsdFileName, packageName)
-	err := os.WriteFile(filePath, []byte(content), 0644)
-	if err != nil {
-		fmt.Printf("  Error creating placeholder file %s: %v\n", filePath, err)
-	} else {
-		fmt.Printf("  Created placeholder file: %s\n", filePath)
+func formatDocComment(doc string) string {
+	// Trim whitespace and newlines
+	doc = strings.TrimSpace(doc)
+
+	// Replace copyright notice with a simpler reference
+	if strings.Contains(doc, "Copyright (c)") {
+		copyrightIdx := strings.Index(doc, "===========================================")
+		if copyrightIdx > 0 {
+			doc = strings.TrimSpace(doc[:copyrightIdx]) + " [Copyright details omitted]"
+		}
 	}
+
+	// Replace newlines with space
+	doc = regexp.MustCompile(`\s+`).ReplaceAllString(doc, " ")
+
+	// Truncate if too long
+	if len(doc) > 80 {
+		return doc[:77] + "..."
+	}
+
+	return doc
 }
 
-func cleanupSchemaDirectories(rootDir string) {
-	fmt.Println("\n=== Cleaning up unwanted schemas directories ===")
+func toTitleCase(s string) string {
+	if s == "" {
+		return ""
+	}
 
-	filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() && filepath.Base(path) == "schemas" {
-			fmt.Printf("Removing directory: %s\n", path)
-			os.RemoveAll(path)
-			return filepath.SkipDir
-		}
-
-		return nil
-	})
+	r := []rune(s)
+	return string(append([]rune{unicode.ToUpper(r[0])}, r[1:]...))
 }
