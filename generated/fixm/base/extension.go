@@ -2,6 +2,8 @@
 
 package base
 
+// Abstract structs
+
 // A base class for all ActualTimeOfArrival class extensions.
 type ActualTimeOfArrivalExtensionType struct {
 }
