@@ -1,33 +1,85 @@
-// Code generated from Organization.xsd; DO NOT EDIT.
+// Code generated from RangesAndChoices.xsd; DO NOT EDIT.
 
 package base
 
-// The identifier of the Aircraft Operator as assigned by ICAO. [FIXM] 
-// This is the ICAO Operator Code as standardised by ICAO Doc 8585 Manual on Designators for Aircraft Operating Agencies, Aeronautical Authorities and Services.
-type AircraftOperatorDesignatorType CharacterStringType
+// Indicates that no specific altitude has been provided for a flight operated under visual flight rules.
+type VisualFlightRulesLevelType string
 
-// A person, organization or enterprise engaged in or offering to engage in an aircraft operation. [ICAO Annex 9]
-type AircraftOperatorType struct {
-	// The identifier of the Aircraft Operator as assigned by ICAO. [FIXM]
-	// This is the ICAO Operator Code as standardised by ICAO Doc 8585 Manual on Designators for Aircraft Operating Agencies, Aeronautical Authorities and Services.
-	DesignatorIcao *AircraftOperatorDesignatorType `xml:"designatorIcao"`
-	// An extension hook for attaching extension (non-core) classes.
-	Extension []AircraftOperatorExtensionType `xml:"extension"`
-	// Aircraft Operator Identity: Identity of a person, organization or enterprise engaged in or offering to engage in aircraft operation.
-	OperatingOrganization *PersonOrOrganizationType `xml:"operatingOrganization"`
+const (
+	VisualFlightRulesLevelTypeVFR VisualFlightRulesLevelType = "VFR"
+)
+
+// The Choice between flight level or altitude specification.
+type FlightLevelOrAltitudeChoiceType struct {
+	// Altitude specification.
+	Altitude AltitudeType `xml:"altitude"`
+	// Flight Level specification.
+	FlightLevel FlightLevelType `xml:"flightLevel"`
 }
 
-// An identifiable, responsible entity that can be either a natural person or an organization.
-type PersonOrOrganizationType struct {
-	// Optional ContactInformation reference.[FIXM]
-	Contact *ContactInformationType `xml:"contact"`
+// Represent either a specific level or a level range with a lower and/or upper bound.
+type FlightLevelOrAltitudeOrRangeChoiceType struct {
+	// Altitude specification.
+	Altitude AltitudeType `xml:"altitude"`
+	// Flight Level specification.
+	FlightLevel FlightLevelType `xml:"flightLevel"`
+	// A vertical range with a lower and/or upper bound.
+	Range VerticalRangeType `xml:"range"`
+}
+
+// A choice between flight level or altitude or VFR specification.
+type FlightLevelOrAltitudeOrVfrChoiceType struct {
+	// Altitude specification.
+	Altitude AltitudeType `xml:"altitude"`
+	// Flight Level specification.
+	FlightLevel FlightLevelType `xml:"flightLevel"`
+	// Visual Flight Rules specification.
+	VisualFlightRules VisualFlightRulesLevelType `xml:"visualFlightRules"`
+}
+
+// Represent either a specific time or a time range with a lower and/or upper boound.
+type TimeChoiceType struct {
+	// Represents a time range with a lower and/or upper bound.
+	Range TimeRangeType `xml:"range"`
+	// A specific time value.
+	Value DateTimeUtcType `xml:"value"`
+}
+
+// Represents a time range with a lower and/or upper bound.
+type TimeRangeType struct {
+	// Lower bound of the time range.
+	Earliest *DateTimeUtcType `xml:"earliest"`
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []PersonOrOrganizationExtensionType `xml:"extension"`
-	// A designator used for identifying the Person, State, Organization, Authority, aircraft operating agency, handling agency etc.  [FIXM]
-	Identifier *CharacterStringType `xml:"identifier"`
-	// The relevant domain in which the person or organization's identifier is defined or used.  [FIXM]
-	IdentifierDomain *CharacterStringType `xml:"identifierDomain"`
-	// The full official name of the Person, State, Organisation, Authority, aircraft operating agency, handling agency etc. [FIXM]
-	Name *TextNameType `xml:"name"`
+	Extension []TimeRangeExtensionType `xml:"extension"`
+	// Upper bound of the time range.
+	Latest *DateTimeUtcType `xml:"latest"`
+}
+
+// Represent either a specific true airspeed or a true airspeed range with a lower and/or upper bound.
+type TrueAirspeedChoiceType struct {
+	// Represents a true airspeed range with a lower and/or upper bound.
+	Range TrueAirspeedRangeType `xml:"range"`
+	// A specific true airspeed value.
+	Value TrueAirspeedType `xml:"value"`
+}
+
+// Represents a true airspeed range with a lower and/or upper bound.
+type TrueAirspeedRangeType struct {
+	// An extension hook for attaching extension (non-core) classes.
+	Extension []TrueAirspeedRangeExtensionType `xml:"extension"`
+	// Lower bound of the true airspeed range.
+	LowerSpeed *TrueAirspeedType `xml:"lowerSpeed"`
+	// Upper bound of the true airspeed range.
+	UpperSpeed *TrueAirspeedType `xml:"upperSpeed"`
+}
+
+// Represents a vertical range with a lower and/or upper bound.
+type VerticalRangeType struct {
+	// An extension hook for attaching extension (non-core) classes.
+	Extension []VerticalRangeExtensionType `xml:"extension"`
+	// Lower bound of the vertical range.
+	LowerBound *FlightLevelOrAltitudeChoiceType `xml:"lowerBound"`
+	// Upper bound of the vertical range.
+	UpperBound *FlightLevelOrAltitudeChoiceType `xml:"upperBound"`
 }
 
