@@ -1,91 +1,74 @@
-// Code generated from Address.xsd; DO NOT EDIT.
+// Code generated from Aircraft.xsd; DO NOT EDIT.
 
-package base
+package aircraft
 
-// The Telecom Networks that can be used to address an organisation. [adapted fr...
-type TelecomNetworkTypeType string
-
-const (
-	TelecomNetworkTypeTypeAFTN TelecomNetworkTypeType = "AFTN"
-	TelecomNetworkTypeTypeINTERNET TelecomNetworkTypeType = "INTERNET"
+import (
+	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
 )
 
-// Basis for e-mail and street addresses. [FIXM]
-type TextAddressType CharacterStringType
+// A unique combination of twenty-four bits available for assignment to an aircraft for the purpose of air-ground communications, navigation and surveillance. [ICAO Doc 4444]
+type AircraftAddressType base.CharacterStringType
 
-// Address city. [FIXM]
-type TextCityType TextNameType
+// Classification of aircraft based on 1.3 times stall speed in landing configuration at maximum certified landing mass. [AIXM 5.1]
+type AircraftApproachCategoryType string
 
-// The country code as specified by ISO 3166. [FIXM]
-type TextCountryCodeType CharacterStringType
+const (
+	AircraftApproachCategoryTypeA AircraftApproachCategoryType = "A" // less than 169 km/h (91 kt) indicated airspeed (IAS) [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+	AircraftApproachCategoryTypeB AircraftApproachCategoryType = "B" // 169 km/h (91 kt) or more but less than 224 km/h (121 kt) IAS [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+	AircraftApproachCategoryTypeC AircraftApproachCategoryType = "C" // 224 km/h (121 kt) or more but less than 261 km/h (141 kt) IAS [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+	AircraftApproachCategoryTypeD AircraftApproachCategoryType = "D" // 261 km/h (141 kt) or more but less than 307 km/h (166 kt) IAS [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+	AircraftApproachCategoryTypeE AircraftApproachCategoryType = "E" // 307 km/h (166 kt) or more but less than 391 km/h (211 kt) IAS [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+	AircraftApproachCategoryTypeH AircraftApproachCategoryType = "H" // Helicopters [ICAO Doc 8168, Vol. I, chapter 1.3.5]
+)
 
-// The country of the physical address for the location or organisation. Full na...
-type TextCountryNameType TextNameType
+// A unique, alphanumeric string that identifies a civil aircraft and consists of the Aircraft Nationality or Common Mark and an additional alphanumeric string, the registration mark, assigned by the state of registry or common mark registering authority. [FIXM]
+type AircraftRegistrationType base.CharacterStringType
 
-// A phone or facsimile number. [AIXM 5.1]
-type TextPhoneType CharacterStringType
+// Helper simpleType that allows representation of aircraft registrations as a list.
+type AircraftRegistrationListType []flight.AircraftRegistrationType
 
-// Information required to enable contact with the responsible person and/or org...
-type ContactInformationType struct {
-	// Optional postal address of the contact.
-	Address *PostalAddressType `xml:"address"`
+// ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]
+type WakeTurbulenceCategoryType string
+
+const (
+	WakeTurbulenceCategoryTypeH WakeTurbulenceCategoryType = "H" // An aircraft type with a maximum certified take-off mass of 136000 kg or more. [ICAO Doc 4444, Appendix 2, ITEM M]
+	WakeTurbulenceCategoryTypeJ WakeTurbulenceCategoryType = "J" // A super heavy aircraft type e.g. the Airbus A380-800. (In the order of 560,000kg). [FIXM]
+	WakeTurbulenceCategoryTypeL WakeTurbulenceCategoryType = "L" // An aircraft type with a maximum certified take-off mass of 7000 kg or less. [ICAO Doc 4444, Appendix 2, ITEM M]
+	WakeTurbulenceCategoryTypeM WakeTurbulenceCategoryType = "M" // An aircraft type with a maximum certified take-off mass of less than 136000 kg. but more than 7000 kg. [ICAO Doc 4444, Appendix 2, ITEM M]
+)
+
+// Aircraft enabling the flight. [FIXM]
+type AircraftType struct {
+	// A unique combination of twenty-four bits available for assignment to an aircraft for the purpose of air-ground communications, navigation and surveillance. [ICAO Doc 4444]
+	AircraftAddress *flight.AircraftAddressType `xml:"aircraftAddress"`
+	// Classification of aircraft based on 1.3 times stall speed in landing configuration at maximum certified landing mass. [AIXM 5.1]
+	AircraftApproachCategory *flight.AircraftApproachCategoryType `xml:"aircraftApproachCategory"`
+	// The type of aircraft enabling the flight. [FIXM]
+	AircraftType []flight.AircraftTypeType `xml:"aircraftType"`
+	// The capabilities of the flight comprising of the:
+			// a) presence of relevant serviceable equipment on board the aircraft;
+			// b) equipment and capabilities commensurate with flight crew qualifications; and
+			// c) where applicable, authorization from the appropriate authority.
+	Capabilities *flight.FlightCapabilitiesType `xml:"capabilities"`
+	// The colours and markings of the aircraft. [ICAO Doc 4444, Appendix 3]
+	ColoursAndMarkings *base.CharacterStringType `xml:"coloursAndMarkings"`
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []ContactInformationExtensionType `xml:"extension"`
-	// The official name of the contact. In case of the organization use, it is the ...
-	Name *TextNameType `xml:"name"`
-	// Optional e-mail address of the contact.[FIXM]
-	OnlineContact []OnlineContactType `xml:"onlineContact"`
-	// Optional phone or facsimile number of the contact.
-	PhoneFax *TelephoneContactType `xml:"phoneFax"`
-	// The official title of the contact.
-	Title *TextNameType `xml:"title"`
+	Extension []base.AircraftExtensionType `xml:"extension"`
+	// A unique, alphanumeric string that identifies a civil aircraft and consists of the Aircraft Nationality or Common Mark and an additional alphanumeric string, the registration mark, assigned by the state of registry or common mark registering authority. [FIXM]
+	Registration *flight.AircraftRegistrationListType `xml:"registration"`
+	// ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]
+	WakeTurbulence *flight.WakeTurbulenceCategoryType `xml:"wakeTurbulence"`
 }
 
-// The Telecom Networks that can be used to address an organisation. [adapted fr...
-type NetworkChoiceType struct {
-	// Used to specify network types not included in the TelecomNetworkType list.
-	Other CharacterStringType `xml:"other"`
-	// Type of telecom network used.
-	Type TelecomNetworkTypeType `xml:"type"`
-}
-
-// On-line or Network information that can be used to contact the individual or ...
-type OnlineContactType struct {
-	// The address of the electronic mailbox of the responsible organisation or indi...
-	Email *TextAddressType `xml:"email"`
+// The type of aircraft enabling the flight. [FIXM]
+type AircraftTypeType struct {
+	// In the case of a formation flight, number of aircraft of the same aircraft type within the formation. [FIXM]
+	AircraftCount *base.CountPositiveType `xml:"aircraftCount"`
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []OnlineContactExtensionType `xml:"extension"`
-	// Location (address) for on-line access using a Uniform Resource Locator addres...
-	Linkage *TextAddressType `xml:"linkage"`
-	// The Telecom Networks that can be used to address an organisation. [adapted fr...
-	Network *NetworkChoiceType `xml:"network"`
-}
-
-// Physical address at which the organization or individual may be contacted. De...
-type PostalAddressType struct {
-	// The state or province of the location or organisation.
-	AdministrativeArea *TextNameType `xml:"administrativeArea"`
-	// The city of the location or organisation.
-	City *TextCityType `xml:"city"`
-	// The country of the physical address for the location or organisation. ISO 316...
-	CountryCode *TextCountryCodeType `xml:"countryCode"`
-	// The country of the physical address for the location or organisation. Full na...
-	CountryName *TextCountryNameType `xml:"countryName"`
-	// The street address line for the location. More than one address line may be u...
-	DeliveryPoint *TextAddressType `xml:"deliveryPoint"`
-	// An extension hook for attaching extension (non-core) classes.
-	Extension []PostalAddressExtensionType `xml:"extension"`
-	// The ZIP or other postal code for the location or organisation.
-	PostalCode *TextNameType `xml:"postalCode"`
-}
-
-// Telephone numbers at which the organisation or individual may be contacted. F...
-type TelephoneContactType struct {
-	// An extension hook for attaching extension (non-core) classes.
-	Extension []TelephoneContactExtensionType `xml:"extension"`
-	// The telephone number of a facsimile machine for the responsible organisation ...
-	Facsimile *TextPhoneType `xml:"facsimile"`
-	// The telephone number by which individuals can speak to the responsible organi...
-	Voice *TextPhoneType `xml:"voice"`
+	Extension []base.AircraftTypeExtensionType `xml:"extension"`
+	// The aircraft type designator of the aircraft as specified in ICAO Doc 8643. [FIXM]
+	IcaoAircraftTypeDesignator base.AircraftTypeDesignatorType `xml:"icaoAircraftTypeDesignator"`
+	// Other, non-ICAO identification of the aircraft type. [FIXM]
+	OtherAircraftType base.CharacterStringType `xml:"otherAircraftType"`
 }
 
