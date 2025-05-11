@@ -4,7 +4,7 @@ package departure
 
 import (
 	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory/routetrajectory"
+	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory"
 )
 
 // Identifies a flight that has filed its flight plan while in the air, beginning its route description from a specified point en-route, and therefore may not have provided a departure aerodrome.
@@ -16,7 +16,7 @@ const (
 )
 
 // The type of departure time represented. [FIXM]
-type DepartureTimeTypeType routetrajectory.TrajectoryPointPropertyTypeType
+type DepartureTimeTypeType flightroutetrajectory.TrajectoryPointPropertyTypeType
 
 const (
 	DepartureTimeTypeTypeOFF_BLOCKS DepartureTimeTypeType = "OFF_BLOCKS" // This is the point at which the aircraft pushes back and begins to taxi for departure.

@@ -6,11 +6,11 @@ import (
 	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
 	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/aircraft"
 	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/arrival"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/packaging"
+	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/cargo"
 	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/departure"
 	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/emergency"
 	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/enroute"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetragectory"
+	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory"
 )
 
 // Up to four-digit commercial flight number. [FIXM]
@@ -90,7 +90,7 @@ type FlightType struct {
 	// The actual arrival of the flight. [FIXM]
 	Arrival *arrival.ArrivalType `xml:"arrival"`
 	// Contains information about any onboard dangerous goods.
-	DangerousGoods []packaging.DangerousGoodsType `xml:"dangerousGoods"`
+	DangerousGoods []cargo.DangerousGoodsType `xml:"dangerousGoods"`
 	// Contains flight departure information
 	Departure *departure.DepartureType `xml:"departure"`
 	// Groups emergency information (description, phase, position, etc) for the flight.
@@ -170,17 +170,18 @@ type IataFlightDesignatorType struct {
 type RouteTrajectoryGroupContainerType struct {
 	// The 4D Trajectory agreed to by a FF-ICE enabled Air Traffic Management Service Providers (eASP) after collaboration between the FF-ICE enabled airspace user (eAU) and the eASP.
 	// The route of flight agreed to by a FF-ICE enabled Air Traffic Management Service Providers (eASP) after collaboration between the FF-ICE enabled airspace user (eAU) and the eASP. 
-	Agreed *flightroutetragectory.RouteTrajectoryGroupType `xml:"agreed"`
+	
+	Agreed *flightroutetrajectory.RouteTrajectoryGroupType `xml:"agreed"`
 	// Represents the current flight plan concept described by ICAO PANS-ATM Doc 4444.
-	Current *flightroutetragectory.RouteTrajectoryGroupType `xml:"current"`
+	Current *flightroutetrajectory.RouteTrajectoryGroupType `xml:"current"`
 	// The preferred route of flight submitted by the FF-ICE enabled airspace user (eAU) to the FF-ICE enabled Air Traffic Management Service Providers (eASP) subject to required constraints.
 	// This trajectory indicates the preferred 4D trajectory submitted by the FF-ICE enabled airspace user (eAU) to the FF-ICE enabled Air Traffic Management Service Providers (eASP) subject to required constraints.
-	Desired *flightroutetragectory.RouteTrajectoryGroupType `xml:"desired"`
+	Desired *flightroutetrajectory.RouteTrajectoryGroupType `xml:"desired"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RouteTrajectoryGroupContainerExtensionType `xml:"extension"`
 	// The 4D Trajectory used during the collaboration between the FF-ICE enabled airspace user (eAU) and the FF-ICE enabled Air Traffic Management Service Providers (eASP) in order to agree on a 4D trajectory. This trajectory is intended to be transitory. 
 	// This Route is used during collaboration between the FF-ICE enabled airspace user (eAU) and the FF-ICE enabled Air Traffic Management Service Providers (eASP) in order to agree on a route. This route field is intended to be transitory.
-	Negotiating *flightroutetragectory.RouteTrajectoryGroupType `xml:"negotiating"`
+	Negotiating *flightroutetrajectory.RouteTrajectoryGroupType `xml:"negotiating"`
 }
 
 // A container for supplementary information about the flight. This container does not capture the complete set of elements described in ICAO Doc 4444 ITEM 19 "Supplementary Information"; it only contains those elements that could not be modeled more logically in other FIXM structures. [FIXM]
