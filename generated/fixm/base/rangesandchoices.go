@@ -2,7 +2,7 @@
 
 package base
 
-// Indicates that no specific altitude has been provided for a flight operated u...
+// Indicates that no specific altitude has been provided for a flight operated under visual flight rules.
 type VisualFlightRulesLevelType string
 
 const (
@@ -17,7 +17,7 @@ type FlightLevelOrAltitudeChoiceType struct {
 	FlightLevel FlightLevelType `xml:"flightLevel"`
 }
 
-// Represent either a specific level or a level range with a lower and/or upper ...
+// Represent either a specific level or a level range with a lower and/or upper bound.
 type FlightLevelOrAltitudeOrRangeChoiceType struct {
 	// Altitude specification.
 	Altitude AltitudeType `xml:"altitude"`
@@ -37,7 +37,7 @@ type FlightLevelOrAltitudeOrVfrChoiceType struct {
 	VisualFlightRules VisualFlightRulesLevelType `xml:"visualFlightRules"`
 }
 
-// Represent either a specific time or a time range with a lower and/or upper bo...
+// Represent either a specific time or a time range with a lower and/or upper boound.
 type TimeChoiceType struct {
 	// Represents a time range with a lower and/or upper bound.
 	Range TimeRangeType `xml:"range"`
@@ -55,7 +55,7 @@ type TimeRangeType struct {
 	Latest *DateTimeUtcType `xml:"latest"`
 }
 
-// Represent either a specific true airspeed or a true airspeed range with a low...
+// Represent either a specific true airspeed or a true airspeed range with a lower and/or upper bound.
 type TrueAirspeedChoiceType struct {
 	// Represents a true airspeed range with a lower and/or upper bound.
 	Range TrueAirspeedRangeType `xml:"range"`
