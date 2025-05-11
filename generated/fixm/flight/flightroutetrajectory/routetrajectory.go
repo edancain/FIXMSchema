@@ -145,7 +145,7 @@ type EstimatedElapsedTimeType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.EstimatedElapsedTimeExtensionType `xml:"extension"`
 	// The location associated with estimated elapsed time. It can be a longitude, significant point or flight information region.
-	Location *flight.ElapsedTimeLocationChoiceType `xml:"location"`
+	Location *ElapsedTimeLocationChoiceType `xml:"location"`
 	/* TODO
 	<xs:attribute name="seqNum" use="optional" type="fb:CountType">
 			<xs:annotation>
@@ -164,7 +164,7 @@ type FlightRouteInformationType struct {
 	// The true airspeed for the first or the whole cruising portion of the flight.  This can be for a filed flight or an active flight.  This element is strategic in nature.
 	CruisingSpeed *base.TrueAirspeedType `xml:"cruisingSpeed"`
 	// The estimated amount of time from takeoff to reach a significant point or Flight Information Region (FIR) boundary along the route of flight. Elements are ordered according to increasing duration from start. 
-	EstimatedElapsedTime []flight.EstimatedElapsedTimeType `xml:"estimatedElapsedTime"`
+	EstimatedElapsedTime []EstimatedElapsedTimeType `xml:"estimatedElapsedTime"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.FlightRouteInformationExtensionType `xml:"extension"`
 	// A string of route elements complying with PANS-ATM Item 15c
@@ -191,7 +191,7 @@ type PerformanceProfileType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.PerformanceProfileExtensionType `xml:"extension"`
 	// A point in a performance climb or descent profile.  Order is based on time from earliest to latest.
-	ProfilePoint []flight.ProfilePointType `xml:"profilePoint"`
+	ProfilePoint []ProfilePointType `xml:"profilePoint"`
 }
 
 // Delay or holding planned to occur at a significant point or along a route element.
@@ -201,7 +201,7 @@ type PlannedDelayType struct {
 	// Indicates a named hold pattern, airspace, or aerodrome at which the delay is expected to occur.
 	DelayReference *base.CharacterStringType `xml:"delayReference"`
 	// Indicates if the delay is planned airborne holding or Operator (Airspace User) requested operations at a specified location.
-	DelayType *flight.PlannedDelayTypeType `xml:"delayType"`
+	DelayType *PlannedDelayTypeType `xml:"delayType"`
 	// The length of time the flight is expected to be delayed at a specific point.
 	DelayValue *base.DurationType `xml:"delayValue"`
 	// An extension hook for attaching extension (non-core) classes.
@@ -240,7 +240,7 @@ type ProfilePointType struct {
 // The route (airway) to the next element on the route. Can be either an en route airway, standard instrument departure route, or standard instrument arrival route. [FIXM]
 type RouteDesignatorToNextElementChoiceType struct {
 	// Indicates that the route to next element is either DIRECT or UNSPECIFIED.
-	OtherRouteDesignator flight.OtherRouteDesignatorType `xml:"otherRouteDesignator"`
+	OtherRouteDesignator OtherRouteDesignatorType `xml:"otherRouteDesignator"`
 	// The coded designator for a published ATS route or route segment.
 	RouteDesignator base.RouteDesignatorType `xml:"routeDesignator"`
 	// The textual designator of the Standard Instrument Arrival (STAR).
@@ -257,27 +257,27 @@ type RouteTrajectoryElementType struct {
 	// The distance along the route.  For an eASP-provided expanded route, it is computed from the first converted point in the eASP's airspace for each route point in the expanded route. For an operator-provided expanded route, it is computed from the beginning of the route.
 	AlongRouteDistance *base.DistanceType `xml:"alongRouteDistance"`
 	// A number of constraints can be associated with each Expanded Route Point and Trajectory point.
-	Constraint []flight.RouteTrajectoryConstraintType `xml:"constraint"`
+	Constraint []RouteTrajectoryConstraintType `xml:"constraint"`
 	// A specified geographical location used in defining the flight route or expanded route. [FIXM]
 	ElementStartPoint *base.SignificantPointChoiceType `xml:"elementStartPoint"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RouteTrajectoryElementExtensionType `xml:"extension"`
 	// Describes the planned change of flight rules (e.g., IFR/VFR) associated with a route point.
-	FlightRulesChange *flight.FlightRulesType `xml:"flightRulesChange"`
+	FlightRulesChange *FlightRulesType `xml:"flightRulesChange"`
 	// Identifies if the route point or element was modified from the reference version, identified in the message, during negotiation by an ASP. 
-	Modified *flight.ModifiedRouteItemIndicatorType `xml:"modified"`
+	Modified *ModifiedRouteItemIndicatorType `xml:"modified"`
 	// A reference to an ATFM program name that modified the route.
 	ModifiedRouteItemReference *base.CharacterStringType `xml:"modifiedRouteItemReference"`
 	// Delay or holding planned to occur at a significant point or along a route element.
-	PlannedDelay *flight.PlannedDelayType `xml:"plannedDelay"`
+	PlannedDelay *PlannedDelayType `xml:"plannedDelay"`
 	// Identifies the location, altitude and time of a trajectory point.
-	Point4D *flight.TrajectoryPoint4DType `xml:"point4D"`
+	Point4D *TrajectoryPoint4DType `xml:"point4D"`
 	// Flight Route element may contain a list of route changes.
-	RouteChange *flight.RouteChangeType `xml:"routeChange"`
+	RouteChange *RouteChangeType `xml:"routeChange"`
 	// The route (airway) to the next element on the route. Can be either an en route airway, standard instrument departure route, or standard instrument arrival route. [FIXM]
-	RouteDesignatorToNextElement *flight.RouteDesignatorToNextElementChoiceType `xml:"routeDesignatorToNextElement"`
+	RouteDesignatorToNextElement *RouteDesignatorToNextElementChoiceType `xml:"routeDesignatorToNextElement"`
 	// Indicates the route description is truncated at the preceding point.
-	RouteTruncationIndicator *flight.RouteTruncationIndicatorType `xml:"routeTruncationIndicator"`
+	RouteTruncationIndicator *RouteTruncationIndicatorType `xml:"routeTruncationIndicator"`
 	/* 
 	<xs:attribute name="seqNum" use="optional" type="fb:CountType">
 			<xs:annotation>
@@ -290,19 +290,19 @@ type RouteTrajectoryElementType struct {
 // A data container supporting the representation of aircraft movement descriptions with variable levels of granularity.  This container enables the representation of a flight route and a 4D trajectory, as described in ICAO Doc 9965 Volume 2.  [FIXM]
 type RouteTrajectoryGroupType struct {
 	// A zero-wind, standard atmosphere, unconstrained climb profile reflective of the flight capabilities and desired parameters during climb.
-	ClimbProfile *flight.PerformanceProfileType `xml:"climbProfile"`
+	ClimbProfile *PerformanceProfileType `xml:"climbProfile"`
 	// Initially submitted by the airspace user, this defines the target speed in both Indicated Airspeed (IAS) and MACH so the aircraft can climb through the crossover altitude and target the MACH speed when needed.
-	ClimbSchedule *flight.SpeedScheduleType `xml:"climbSchedule"`
+	ClimbSchedule *SpeedScheduleType `xml:"climbSchedule"`
 	// A zero-wind, standard atmosphere, unconstrained descent profile reflective of the flight capabilities and desired parameters during descent.
-	DescentProfile *flight.PerformanceProfileType `xml:"descentProfile"`
+	DescentProfile *PerformanceProfileType `xml:"descentProfile"`
 	// Initially submitted by the airspace user, this defines the target speed in both (Indicated Airspeed) IAS and MACH so the aircraft can descend through the crossover altitude and target the IAS speed when needed.
-	DescentSchedule *flight.SpeedScheduleType `xml:"descentSchedule"`
+	DescentSchedule *SpeedScheduleType `xml:"descentSchedule"`
 	// A container for information pertinent to a single point in a trajectory. The elements are ordered according to increasing time/distance from the start point.
-	Element []flight.RouteTrajectoryElementType `xml:"element"`
+	Element []RouteTrajectoryElementType `xml:"element"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RouteTrajectoryGroupExtensionType `xml:"extension"`
 	// Contains information about the Flight Route. The route is comprised of Route Segments, which are comprised of Route Point/Airway pairs. Route also contains an expanded route.
-	RouteInformation *flight.FlightRouteInformationType `xml:"routeInformation"`
+	RouteInformation *FlightRouteInformationType `xml:"routeInformation"`
 	// The estimated takeoff mass of the aircraft.
 	TakeoffMass *base.MassType `xml:"takeoffMass"`
 }
@@ -326,9 +326,9 @@ type TrajectoryPoint4DType struct {
 	// Altitude of the 4D point.
 	Level *base.FlightLevelOrAltitudeChoiceType `xml:"level"`
 	// In a predicted trajectory, the instantaneous temperature and wind vector used at the 4D Point for creating the 4D trajectory.
-	MetData *flight.MeteorologicalDataType `xml:"metData"`
+	MetData *MeteorologicalDataType `xml:"metData"`
 	// Describes any applicable properties of the trajectory point.  May include multiple properties per point.
-	PointProperty []flight.TrajectoryPointPropertyType `xml:"pointProperty"`
+	PointProperty []TrajectoryPointPropertyType `xml:"pointProperty"`
 	// The geographical location of the 4D point.
 	Position *base.GeographicalPositionType `xml:"position"`
 	// The predicted indicated airspeed or Mach at the trajectory point.
@@ -336,7 +336,7 @@ type TrajectoryPoint4DType struct {
 	// The predicted ground speed at the Trajectory Point in knots or kilometers per hour.
 	PredictedGroundspeed *base.GroundSpeedType `xml:"predictedGroundspeed"`
 	// 4D Point time expressed as either absolute or relative time.
-	Time *flight.Point4DTimeChoiceType `xml:"time"`
+	Time *Point4DTimeChoiceType `xml:"time"`
 	// Vertical Range representing block altitude clearances
 	VerticalRange *base.VerticalRangeType `xml:"verticalRange"`
 }
@@ -348,9 +348,9 @@ type TrajectoryPointPropertyType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.TrajectoryPointPropertyExtensionType `xml:"extension"`
 	// Provides the type of trajectory point property.
-	PropertyType *flight.TrajectoryPointPropertyTypeType `xml:"propertyType"`
+	PropertyType *TrajectoryPointPropertyTypeType `xml:"propertyType"`
 	// A reference providing an identifier of airspace or program affecting the point.
-	Reference *flight.TrajectoryPointReferenceType `xml:"reference"`
+	Reference *TrajectoryPointReferenceType `xml:"reference"`
 }
 
 // A reference providing an identifier of airspace or program affecting the point.

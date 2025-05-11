@@ -4,6 +4,7 @@ package departure
 
 import (
 	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory/routetrajectory"
 )
 
 // Identifies a flight that has filed its flight plan while in the air, beginning its route description from a specified point en-route, and therefore may not have provided a departure aerodrome.
@@ -15,7 +16,7 @@ const (
 )
 
 // The type of departure time represented. [FIXM]
-type DepartureTimeTypeType flight.TrajectoryPointPropertyTypeType
+type DepartureTimeTypeType routetrajectory.TrajectoryPointPropertyTypeType
 
 const (
 	DepartureTimeTypeTypeOFF_BLOCKS DepartureTimeTypeType = "OFF_BLOCKS" // This is the point at which the aircraft pushes back and begins to taxi for departure.
@@ -31,15 +32,15 @@ type ActualTimeOfDepartureType struct {
 	// The actual time of departure from the aerodrome. [ICAO Doc 4444, Appendix 3, Field Type 13]
 	Time *base.DateTimeUtcType `xml:"time"`
 	// The type of departure time represented. [FIXM]
-	Type *flight.DepartureTimeTypeType `xml:"type"`
+	Type *DepartureTimeTypeType `xml:"type"`
 }
 
 // Groups information pertaining to the flight's departure.
 type DepartureType struct {
 	// The time, type of time (wheels-off, off blocks, etc.), and geographical position of the departure.  [FIXM]
-	ActualTimeOfDeparture *flight.ActualTimeOfDepartureType `xml:"actualTimeOfDeparture"`
+	ActualTimeOfDeparture *ActualTimeOfDepartureType `xml:"actualTimeOfDeparture"`
 	// Identifies a flight that has filed its flight plan while in the air, beginning its route description from a specified point en-route, and therefore may not have provided a departure aerodrome.
-	AirfileIndicator *flight.AirfileIndicatorType `xml:"airfileIndicator"`
+	AirfileIndicator *AirfileIndicatorType `xml:"airfileIndicator"`
 	// The identifier of the departure airport slot allocated to the flight. [FIXM]
 	AirportSlotIdentification *base.AirportSlotIdentificationType `xml:"airportSlotIdentification"`
 	// An extension hook for attaching extension (non-core) classes.
@@ -51,11 +52,11 @@ type DepartureType struct {
 	// The aerodrome from which the flight departs. [FIXM]
 	DepartureAerodrome *base.AerodromeReferenceType `xml:"departureAerodrome"`
 	// The first point of the route, for use when a departure aerodrome does not exist (such as when the flight plan is filed from the air) or is otherwise unknown.
-	DeparturePoint *flight.DeparturePointChoiceType `xml:"departurePoint"`
+	DeparturePoint *DeparturePointChoiceType `xml:"departurePoint"`
 	// Specifies the previous departure aerodrome value when a change is made.
 	DepartureAerodromePrevious *base.AerodromeReferenceType `xml:"departureAerodromePrevious"`
 	// Specifies the previous departure point value when a change is made.
-	DeparturePointPrevious *flight.DeparturePointChoiceType `xml:"departurePointPrevious"`
+	DeparturePointPrevious *DeparturePointChoiceType `xml:"departurePointPrevious"`
 	// The estimated time at which the aircraft will commence movement associated with departure.
 	EstimatedOffBlockTime *base.DateTimeUtcType `xml:"estimatedOffBlockTime"`
 	// The estimated time of departure from the first point on the route, for use when a departure aerodrome does not exist (such as when the flight plan is filed from the air) or is otherwise unknown.

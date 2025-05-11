@@ -71,7 +71,7 @@ type SidStarDesignatorType CharacterStringType
 // An aerodrome reference being either:
 	// - the ICAO location indicator of the aerodrome, as listed in ICAO Doc 7910 (E.g. "KDFW")
 	// - if no location indicator is available, the aerodrome name (E.g. "Dallas Fort Worth") or the identifier assigned to the aerodrome location in accordance with rules (resolution 767) governed by the International Air Transport Association. (E.g. "DFW")
-[FIXM]
+    // [FIXM]
 type AerodromeReferenceType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []AerodromeReferenceExtensionType `xml:"extension"`

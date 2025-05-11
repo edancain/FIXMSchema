@@ -28,14 +28,14 @@ type FlightEmergencyType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.FlightEmergencyExtensionType `xml:"extension"`
 	// The last two-way contact between an ATS unit and the aircraft. [FIXM]
-	LastContact *flight.LastContactType `xml:"lastContact"`
+	LastContact *LastContactType `xml:"lastContact"`
 	// The ICAO identifier of the ATS unit originating the emergency message.
 	Originator *base.AtcUnitReferenceType `xml:"originator"`
 	// Other pertinent information not captured elsewhere needed to notify appropriate organizations regarding aircraft in need of search and rescue.
 	OtherInformation *base.CharacterStringType `xml:"otherInformation"`
 	// A generic term meaning, as the case may be, uncertainty phase, alert phase or distress phase. [ICAO Annex 11]
 	// This is the stage of emergency the flight is currently under or an indication the emergency has been cancelled, as designated by an ATS unit. [FIXM]
-	Phase *flight.EmergencyPhaseType `xml:"phase"`
+	Phase *EmergencyPhaseType `xml:"phase"`
 }
 
 // The last two-way contact between an ATS unit and the aircraft. [FIXM]
@@ -49,7 +49,7 @@ type LastContactType struct {
 	// The last ATS unit which had two-way contact with the aircraft.
 	LastContactUnit *base.AtcUnitNameType `xml:"lastContactUnit"`
 	// The position of the aircraft last known to ATS and a corresponding timestamp.
-	Position *flight.LastPositionReportType `xml:"position"`
+	Position *LastPositionReportType `xml:"position"`
 }
 
 // The position of the aircraft last known to ATS and a corresponding timestamp.
@@ -75,7 +75,7 @@ type LastPositionReportType struct {
 // Groups information regarding loss of radio communication capabilities.
 type RadioCommunicationFailureType struct {
 	// The last ATS unit which had two-way contact with the aircraft.
-	Contact *flight.LastContactType `xml:"contact"`
+	Contact *LastContactType `xml:"contact"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RadioCommunicationFailureExtensionType `xml:"extension"`
 	// Pertinent information needed to notify appropriate organizations regarding loss of radio communication capabilities.

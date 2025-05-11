@@ -27,12 +27,12 @@ type TransportIndexType base.DecimalIndexType
 // The grouping element for goods that contain radioactive materials.
 type RadioactiveMaterialType struct {
 	// >A category used for radioactive materials in a package, overpack or freight container, based on their maximum radiation level.
-	Category *flight.RadioactiveMaterialCategoryType `xml:"category"`
+	Category *RadioactiveMaterialCategoryType `xml:"category"`
 	// The dimensionless number (rounded up to the next tenth) assigned to and placed on the label of a fissile material package to designate the degree of control of accumulation of packages containing fissile material during transportation.
-	CriticalSafetyIndex *flight.CriticalSafetyIndexType `xml:"criticalSafetyIndex"`
+	CriticalSafetyIndex *CriticalSafetyIndexType `xml:"criticalSafetyIndex"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RadioactiveMaterialExtensionType `xml:"extension"`
 	// A figure representing the radiation level measured at one meter from the package.
-	TransportIndex *flight.TransportIndexType `xml:"transportIndex"`
+	TransportIndex *TransportIndexType `xml:"transportIndex"`
 }
 

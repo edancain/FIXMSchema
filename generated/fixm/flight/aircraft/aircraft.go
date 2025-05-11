@@ -4,6 +4,7 @@ package aircraft
 
 import (
 	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/capability"
 )
 
 // A unique combination of twenty-four bits available for assignment to an aircraft for the purpose of air-ground communications, navigation and surveillance. [ICAO Doc 4444]
@@ -25,7 +26,7 @@ const (
 type AircraftRegistrationType base.CharacterStringType
 
 // Helper simpleType that allows representation of aircraft registrations as a list.
-type AircraftRegistrationListType []flight.AircraftRegistrationType
+type AircraftRegistrationListType []AircraftRegistrationType
 
 // ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]
 type WakeTurbulenceCategoryType string
@@ -40,24 +41,24 @@ const (
 // Aircraft enabling the flight. [FIXM]
 type AircraftType struct {
 	// A unique combination of twenty-four bits available for assignment to an aircraft for the purpose of air-ground communications, navigation and surveillance. [ICAO Doc 4444]
-	AircraftAddress *flight.AircraftAddressType `xml:"aircraftAddress"`
+	AircraftAddress *AircraftAddressType `xml:"aircraftAddress"`
 	// Classification of aircraft based on 1.3 times stall speed in landing configuration at maximum certified landing mass. [AIXM 5.1]
-	AircraftApproachCategory *flight.AircraftApproachCategoryType `xml:"aircraftApproachCategory"`
+	AircraftApproachCategory *AircraftApproachCategoryType `xml:"aircraftApproachCategory"`
 	// The type of aircraft enabling the flight. [FIXM]
-	AircraftType []flight.AircraftTypeType `xml:"aircraftType"`
+	AircraftType []AircraftTypeType `xml:"aircraftType"`
 	// The capabilities of the flight comprising of the:
 			// a) presence of relevant serviceable equipment on board the aircraft;
 			// b) equipment and capabilities commensurate with flight crew qualifications; and
 			// c) where applicable, authorization from the appropriate authority.
-	Capabilities *flight.FlightCapabilitiesType `xml:"capabilities"`
+	Capabilities *capability.FlightCapabilitiesType `xml:"capabilities"`
 	// The colours and markings of the aircraft. [ICAO Doc 4444, Appendix 3]
 	ColoursAndMarkings *base.CharacterStringType `xml:"coloursAndMarkings"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.AircraftExtensionType `xml:"extension"`
 	// A unique, alphanumeric string that identifies a civil aircraft and consists of the Aircraft Nationality or Common Mark and an additional alphanumeric string, the registration mark, assigned by the state of registry or common mark registering authority. [FIXM]
-	Registration *flight.AircraftRegistrationListType `xml:"registration"`
+	Registration *AircraftRegistrationListType `xml:"registration"`
 	// ICAO classification of the aircraft wake turbulence, based on the maximum certified take off mass. [FIXM]
-	WakeTurbulence *flight.WakeTurbulenceCategoryType `xml:"wakeTurbulence"`
+	WakeTurbulence *WakeTurbulenceCategoryType `xml:"wakeTurbulence"`
 }
 
 // The type of aircraft enabling the flight. [FIXM]

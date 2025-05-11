@@ -60,48 +60,48 @@ type DangerousGoodsDimensionsType struct {
 // The part of the IATA Shipper's Declaration For Dangerous Goods that contains the Package Details for the shipment.
 type DangerousGoodsPackageType struct {
 	// A statement identifying the dangerous goods listed are all contained within the same outer packaging.
-	AllPackedInOne *flight.AllPackedInOneType `xml:"allPackedInOne"`
+	AllPackedInOne *AllPackedInOneType `xml:"allPackedInOne"`
 	// When shipping dangerous goods, the reference to the group which identifies the kind of substances and articles deemed to be compatible. 
-	CompatibilityGroup *flight.CompatibilityGroupType `xml:"compatibilityGroup"`
+	CompatibilityGroup *CompatibilityGroupType `xml:"compatibilityGroup"`
 	// Describes whether the shipment is packed to comply with the limitations prescribed for passenger and cargo aircraft or the limitations for cargo aircraft only.
-	DangerousGoodsLimitation *flight.AircraftDangerousGoodsLimitationType `xml:"dangerousGoodsLimitation"`
+	DangerousGoodsLimitation *AircraftDangerousGoodsLimitationType `xml:"dangerousGoodsLimitation"`
 	// The total number of dangerous good packages of the same type and content.
 	DangerousGoodsQuantity *base.CountPositiveType `xml:"dangerousGoodsQuantity"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.DangerousGoodsPackageExtensionType `xml:"extension"`
 	// A number assigned to a dangerous good that represents a classification (Class) according to the most dominant hazard it represents, potentially followed by a number representing a subdivision (Division) within the Class.
-	HazardClass *flight.HazardClassType `xml:"hazardClass"`
+	HazardClass *HazardClassType `xml:"hazardClass"`
 	// A code that indicates the relative degree of danger presented by various articles and substances within a Class or Division.
-	PackingGroup *flight.PackingGroupType `xml:"packingGroup"`
+	PackingGroup *PackingGroupType `xml:"packingGroup"`
 	// The name used to describe a particular article or substance in all shipping documents and notifications and, where appropriate, on packaging, as shown in the UN Model Regulations Dangerous Goods List.
 	ProperShippingName *base.CharacterStringType `xml:"properShippingName"`
 	// The grouping element for goods that contain radioactive materials.
-	RadioactiveMaterials *flight.RadioactiveMaterialType `xml:"radioactiveMaterials"`
+	RadioactiveMaterials *RadioactiveMaterialType `xml:"radioactiveMaterials"`
 	// Weight and volume (not height, width, and depth)
-	ShipmentDimensions *flight.DangerousGoodsDimensionsType `xml:"shipmentDimensions"`
+	ShipmentDimensions *DangerousGoodsDimensionsType `xml:"shipmentDimensions"`
 	// An identifier of any subsidiary hazard class(es)/division(s) in addition to the primary hazard class and division.
-	SubsidiaryHazardClass []flight.HazardClassType `xml:"subsidiaryHazardClass"`
+	SubsidiaryHazardClass []HazardClassType `xml:"subsidiaryHazardClass"`
 	// A four-digit identification number assigned by the United Nations Committee of Experts on the Transport of Dangerous Goods to identify a substance or a particular group of substances considered dangerous goods.
-	UnNumber *flight.UnNumberType `xml:"unNumber"`
+	UnNumber *UnNumberType `xml:"unNumber"`
 }
 
 // The part of the IATA Shipper's Declaration For Dangerous Goods that contains the Package Details for the shipment.
 type DangerousGoodsPackageGroupType struct {
 	// A collection of at least one DangerousGoodsPackage.
-	DangerousGoodsPackage []flight.DangerousGoodsPackageType `xml:"dangerousGoodsPackage"`
+	DangerousGoodsPackage []DangerousGoodsPackageType `xml:"dangerousGoodsPackage"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.DangerousGoodsPackageGroupExtensionType `xml:"extension"`
 	// Weight and volume (not height, width, and depth)
-	ShipmentDimensions *flight.DangerousGoodsDimensionsType `xml:"shipmentDimensions"`
+	ShipmentDimensions *DangerousGoodsDimensionsType `xml:"shipmentDimensions"`
 }
 
 // A number assigned to a dangerous good that represents a classification (Class) according to the most dominant hazard it represents, potentially followed by a number representing a subdivision (Division) within the Class.
 // An identifier of any subsidiary hazard class(es)/division(s) in addition to the primary hazard class and division.
 type HazardClassType struct {
 	// A number assigned to a dangerous good that represents a classification (Class) according to the most dominant hazard it represents.
-	Class *flight.RestrictedHazardClassType `xml:"class"`
+	Class *RestrictedHazardClassType `xml:"class"`
 	// A number representing a subdivision (Division) within the Class.
-	Division *flight.HazardDivisionType `xml:"division"`
+	Division *HazardDivisionType `xml:"division"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.HazardClassExtensionType `xml:"extension"`
 }

@@ -2,6 +2,11 @@
 
 package base
 
+import (
+	"github.com/shopspring/decimal"
+	"time"
+)
+
 // A group of letters, figures or a combination thereof which is either identical to, or the coded equivalent of, the aircraft call sign to be used in air-ground communications, and which is used to identify the aircraft in ground-ground air traffic services communications. [ICAO Doc 4444]
 type AircraftIdentificationType CharacterStringType
 
@@ -26,20 +31,20 @@ type CountPositiveType CountType
 type DateTimeUtcType DateTimeUtcHighPrecisionType // TODO value range
 
 // Describes instances identified by the combination of a date and a time expressed in Coordinated Universal Time (UTC).  [FIXM]
-type DateTimeUtcHighPrecisionType dateTime // TODO value range
+type DateTimeUtcHighPrecisionType time.Time //dateTime // TODO value range
 
 // Describes a date represented in Coordinated Universal Time (UTC). [FIXM]
-type DateUtcType date // TODO value range
+type DateUtcType time.Time // date // TODO value range
 
 // Generic decimal fraction expressed to tenths, used as scaling or comparison factor. [FIXM]
-type DecimalIndexType decimal
+type DecimalIndexType decimal.Decimal
 
 // Length or distance in the temporal dimension. [ISO 19108, chapter 5.2.3.7]
 // Duration has no reference to start or stop times.
-type DurationType duration // TODO value range
+type DurationType time.Duration // TODO value range
 
 // This class provides an optional mechanism enabling FIXM aeronautical fields to be supplemented with references to AIXM features.  Uses of this field should be considered functionally equivalent to the xlink:href field used in AIXM to reference features.  [FIXM]
-type HypertextReferenceType anyURI
+type HypertextReferenceType string
 
 // Mode A SSR code. [FIXM]
 type ModeACodeType CharacterStringType
@@ -64,9 +69,9 @@ type TextNameType CharacterStringType
 
 // An immutable identifier associated with a flight that allows all eligible members of the ATM community to unambiguously refer to information pertaining to the flight.
 type GloballyUniqueFlightIdentifierType struct {
-	creationTime DateTimeUtcType `xml:"creationTime"` // The time at which the GUFI was created.  Used to reduce the likelihood of GUFI collisions and ensure GUFIs remain perpetually unique.
-	namespaceDomain NamespaceDomainType `xml:"namespaceDomain"` // Identifies the particular type of namespace used by the originator of a GUFI.
-	namespaceIdentifier NamespaceIdentifierType `xml:"namespaceIdentifier"` // The namespace chosen by the GUFI originator.  Used to reduce the likelihood of GUFI collisions and provide traceability as to which entity generated a particular GUFI.
+	CreationTime DateTimeUtcType `xml:"creationTime"` // The time at which the GUFI was created.  Used to reduce the likelihood of GUFI collisions and ensure GUFIs remain perpetually unique.
+	NamespaceDomain NamespaceDomainType `xml:"namespaceDomain"` // Identifies the particular type of namespace used by the originator of a GUFI.
+	NamespaceIdentifier NamespaceIdentifierType `xml:"namespaceIdentifier"` // The namespace chosen by the GUFI originator.  Used to reduce the likelihood of GUFI collisions and provide traceability as to which entity generated a particular GUFI.
 }
 
 // Reference to a published restriction should allow reference to a NOTAM; advis...
@@ -81,6 +86,6 @@ type RestrictionReferenceType struct {
 
 // A 128-bit number used, with a high probability, to uniquely identify information in computer systems. [FIXM]
 type UniversallyUniqueIdentifierType struct {
-	codeSpace string `xml:"codeSpace"` // Code Space of the UUID
+	CodeSpace string `xml:"codeSpace"` // Code Space of the UUID
 }
 

@@ -3,6 +3,6 @@
 package cargo
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	//"github.com/edancain/FIXMSchema.git/generated/fixm/base"
 )
 

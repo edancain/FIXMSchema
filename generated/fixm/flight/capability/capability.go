@@ -32,7 +32,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type CommunicationCapabilityCodeListType []flight.CommunicationCapabilityCodeType
+type CommunicationCapabilityCodeListType []CommunicationCapabilityCodeType
 
 // A code indicating the capability of the aircraft to communicate or receive data [FIXM]
 type DatalinkCommunicationCapabilityCodeType string
@@ -48,7 +48,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type DatalinkCommunicationCapabilityCodeListType []flight.DatalinkCommunicationCapabilityCodeType
+type DatalinkCommunicationCapabilityCodeListType []DatalinkCommunicationCapabilityCodeType
 
 // Indication of the covered/uncovered nature of the dinghies carried by the aircraft [FIXM]
 type DinghyCoverIndicatorType string
@@ -62,7 +62,7 @@ const (
 type EltHexIdentifierType base.CharacterStringType
 
 // Helper simpleType that allows representation of emergency locator transmitter hexadecimal identifiers as a list.
-type EltHexIdentifierListType []flight.EltHexIdentifierType
+type EltHexIdentifierListType []EltHexIdentifierType
 
 // The type of serviceable communication devices available on the aircraft that are able to transmit an emergency radio signal. [FIXM]
 type EmergencyRadioCapabilityTypeType string
@@ -74,7 +74,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type EmergencyRadioCapabilityTypeListType []flight.EmergencyRadioCapabilityTypeType
+type EmergencyRadioCapabilityTypeListType []EmergencyRadioCapabilityTypeType
 
 // The type of life jackets available on board the aircraft. [FIXM]
 type LifeJacketTypeType string
@@ -87,7 +87,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type LifeJacketTypeListType []flight.LifeJacketTypeType
+type LifeJacketTypeListType []LifeJacketTypeType
 
 // A code indicating the navigation capability of the aircraft and associated flight crew qualifications. [FIXM]
 type NavigationCapabilityCodeType string
@@ -109,7 +109,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type NavigationCapabilityCodeListType []flight.NavigationCapabilityCodeType
+type NavigationCapabilityCodeListType []NavigationCapabilityCodeType
 
 // A coded category denoting which Required Navigation Performance (RNP) and Area Navigation (RNAV) requirements can be met by the aircraft while operating in the context of a particular airspace when supported by the appropriate navigation infrastructure. [FIXM]
 type PerformanceBasedNavigationCapabilityCodeType string
@@ -142,7 +142,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type PerformanceBasedNavigationCapabilityCodeListType []flight.PerformanceBasedNavigationCapabilityCodeType
+type PerformanceBasedNavigationCapabilityCodeListType []PerformanceBasedNavigationCapabilityCodeType
 
 // A code that consists of two 2-letter pairs and acts as a paging system for an ATS unit to establish voice communications with the pilot of an aircraft.
 type SelectiveCallingCodeType base.CharacterStringType
@@ -178,7 +178,7 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type SurveillanceCapabilityCodeListType []flight.SurveillanceCapabilityCodeType
+type SurveillanceCapabilityCodeListType []SurveillanceCapabilityCodeType
 
 // The type of equipment carried on board the aircraft that can be used by the crew and passengers to assist survival in harsh environments in case of emergency. [FIXM]
 type SurvivalEquipmentTypeType string
@@ -191,14 +191,14 @@ const (
 )
 
 // Helper simpleType to allow for enumerated lists in FIXM.
-type SurvivalEquipmentTypeListType []flight.SurvivalEquipmentTypeType
+type SurvivalEquipmentTypeListType []SurvivalEquipmentTypeType
 
 // The serviceable communications equipment, available on the aircraft at the time of flight, and associated flight crew qualifications that may be used to communicate with ATS units. [FIXM]
 type CommunicationCapabilitiesType struct {
 	// A code indicating the capability of the aircraft and associated flight crew qualifications to communicate with ATS units. [FIXM]
-	CommunicationCapabilityCode *flight.CommunicationCapabilityCodeListType `xml:"communicationCapabilityCode"`
+	CommunicationCapabilityCode *CommunicationCapabilityCodeListType `xml:"communicationCapabilityCode"`
 	// A code indicating the capability of the aircraft to communicate or receive data. [FIXM]
-	DatalinkCommunicationCapabilityCode *flight.DatalinkCommunicationCapabilityCodeListType `xml:"datalinkCommunicationCapabilityCode"`
+	DatalinkCommunicationCapabilityCode *DatalinkCommunicationCapabilityCodeListType `xml:"datalinkCommunicationCapabilityCode"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.CommunicationCapabilitiesExtensionType `xml:"extension"`
 	// Additional Communication capabilities available on the aircraft.
@@ -206,7 +206,7 @@ type CommunicationCapabilitiesType struct {
 	// Additional data link capabilities available on the aircraft.
 	OtherDatalinkCapabilities *base.CharacterStringType `xml:"otherDatalinkCapabilities"`
 	// A code that consists of two 2-letter pairs and acts as a paging system for an ATS unit to establish voice communications with the pilot of an aircraft.
-	SelectiveCallingCode *flight.SelectiveCallingCodeType `xml:"selectiveCallingCode"`
+	SelectiveCallingCode *SelectiveCallingCodeType `xml:"selectiveCallingCode"`
 }
 
 // Dinghy information including total capacity in persons of all dinghies carried, indicator if dinghies are covered, their colours and number.  [ICAO Doc 4444, Appendix 2, ITEM 19 D]
@@ -214,7 +214,7 @@ type DinghiesType struct {
 	// The colour of the dinghies carried by the aircraft. [FIXM]
 	Colour *base.CharacterStringType `xml:"colour"`
 	// Indication of the covered/uncovered nature of the dinghies carried by the aircraft.
-	Covered *flight.DinghyCoverIndicatorType `xml:"covered"`
+	Covered *DinghyCoverIndicatorType `xml:"covered"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.DinghiesExtensionType `xml:"extension"`
 	// The number of dinghies carried by the aircraft. [adapted from ICAO Doc 4444, Appendix 2, ITEM 19 D/]
@@ -230,17 +230,17 @@ type DinghiesType struct {
 		// [FIXM]
 type FlightCapabilitiesType struct {
 	// The serviceable communications equipment, available on the aircraft at the time of flight, and associated flight crew qualifications that may be used to communicate with ATS units. [FIXM]
-	Communication *flight.CommunicationCapabilitiesType `xml:"communication"`
+	Communication *CommunicationCapabilitiesType `xml:"communication"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.FlightCapabilitiesExtensionType `xml:"extension"`
 	// The navigation capability of the aircraft and associated flight crew qualifications. [FIXM]
-	Navigation *flight.NavigationCapabilitiesType `xml:"navigation"`
+	Navigation *NavigationCapabilitiesType `xml:"navigation"`
 	// If present, indicates that aircraft has the "standard" capabilities for the flight.
-	StandardCapabilities *flight.StandardCapabilitiesIndicatorType `xml:"standardCapabilities"`
+	StandardCapabilities *StandardCapabilitiesIndicatorType `xml:"standardCapabilities"`
 	// The serviceable Secondary Surveillance Radar (SSR) and/or Automatic Dependent Surveillance (ADS) equipment available on the aircraft at the time of flight that may be used to identify and/or locate the aircraft. [FIXM]
-	Surveillance *flight.SurveillanceCapabilitiesType `xml:"surveillance"`
+	Surveillance *SurveillanceCapabilitiesType `xml:"surveillance"`
 	// The emergency and survival equipments available on board the aircraft. [FIXM]
-	Survival *flight.SurvivalCapabilitiesType `xml:"survival"`
+	Survival *SurvivalCapabilitiesType `xml:"survival"`
 }
 
 // The navigation capability of the aircraft and associated flight crew qualifications [FIXM]
@@ -248,11 +248,11 @@ type NavigationCapabilitiesType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.NavigationCapabilitiesExtensionType `xml:"extension"`
 	// A code indicating the navigation capability of the aircraft and associated flight crew qualifications. [FIXM]
-	NavigationCapabilityCode *flight.NavigationCapabilityCodeListType `xml:"navigationCapabilityCode"`
+	NavigationCapabilityCode *NavigationCapabilityCodeListType `xml:"navigationCapabilityCode"`
 	// Additional navigation capabilities available on board the aircraft.
 	OtherNavigationCapabilities *base.CharacterStringType `xml:"otherNavigationCapabilities"`
 	// A coded category denoting which Required Navigation Performance (RNP) and Area Navigation (RNAV) requirements can be met by the aircraft while operating in the context of a particular airspace when supported by the appropriate navigation infrastructure.
-	PerformanceBasedCode *flight.PerformanceBasedNavigationCapabilityCodeListType `xml:"performanceBasedCode"`
+	PerformanceBasedCode *PerformanceBasedNavigationCapabilityCodeListType `xml:"performanceBasedCode"`
 	// The minimum RVR value required by a flight in order to execute an approach to land at the destination aerodrome in accordance with the applicable ATM configuration. [FF-ICE]
 	RequiredRunwayVisualRange *base.DistanceType `xml:"requiredRunwayVisualRange"`
 }
@@ -264,24 +264,24 @@ type SurveillanceCapabilitiesType struct {
 	// Additional surveillance capabilities available on board the aircraft.
 	OtherSurveillanceCapabilities *base.CharacterStringType `xml:"otherSurveillanceCapabilities"`
 	// A code indicating the SSR and ADS capability of the aircraft. [FIXM]
-	SurveillanceCapabilityCode *flight.SurveillanceCapabilityCodeListType `xml:"surveillanceCapabilityCode"`
+	SurveillanceCapabilityCode *SurveillanceCapabilityCodeListType `xml:"surveillanceCapabilityCode"`
 }
 
 // The emergency and survival equipments available on board the aircraft. [FIXM]
 type SurvivalCapabilitiesType struct {
 	// The identifier of an emergency locator transmitter carried by aircraft. [FIXM]
-	CarriedEltHexIdentifier *flight.EltHexIdentifierListType `xml:"carriedEltHexIdentifier"`
+	CarriedEltHexIdentifier *EltHexIdentifierListType `xml:"carriedEltHexIdentifier"`
 	// Dinghy information including total capacity in persons of all dinghies carried, indicator if dinghies are covered, their colours and number. [ICAO Doc 4444, Appendix 2, ITEM 19 D]
-	DinghyInformation *flight.DinghiesType `xml:"dinghyInformation"`
+	DinghyInformation *DinghiesType `xml:"dinghyInformation"`
 	// The type of serviceable communication devices available on the aircraft that are able to transmit an emergency radio signal. [FIXM]
-	EmergencyRadioCapabilityType *flight.EmergencyRadioCapabilityTypeListType `xml:"emergencyRadioCapabilityType"`
+	EmergencyRadioCapabilityType *EmergencyRadioCapabilityTypeListType `xml:"emergencyRadioCapabilityType"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.SurvivalCapabilitiesExtensionType `xml:"extension"`
 	// The type of life jackets available on board the aircraft. [FIXM]
-	LifeJacketType *flight.LifeJacketTypeListType `xml:"lifeJacketType"`
+	LifeJacketType *LifeJacketTypeListType `xml:"lifeJacketType"`
 	// A description of survival equipment carried on the aircraft and any other useful remarks regarding survival equipment.
 	SurvivalEquipmentRemarks *base.CharacterStringType `xml:"survivalEquipmentRemarks"`
 	// The type of equipment carried on board the aircraft that can be used by the crew and passengers to assist survival in harsh environments in case of emergency. [FIXM]
-	SurvivalEquipmentType *flight.SurvivalEquipmentTypeListType `xml:"survivalEquipmentType"`
+	SurvivalEquipmentType *SurvivalEquipmentTypeListType `xml:"survivalEquipmentType"`
 }
 
