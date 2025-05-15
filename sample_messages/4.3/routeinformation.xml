@@ -1,0 +1,8 @@
+<!--xmlns:fx="http://www.fixm.aero/flight/4.3"-->
+<fx:routeInformation>
+   <fx:cruisingLevel>
+      <fb:altitude uom="FT">5000</fb:altitude>
+   </fx:cruisingLevel>
+   <fx:cruisingSpeed uom="KT">160</fx:cruisingSpeed>
+   <fx:totalEstimatedElapsedTime>P0Y0M0DT0H27M15S</fx:totalEstimatedElapsedTime>
+</fx:routeInformation>

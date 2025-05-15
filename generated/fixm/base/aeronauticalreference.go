@@ -1,6 +1,11 @@
 // Code generated from AeronauticalReference.xsd; DO NOT EDIT.
+// Modified manually to fix simple types with attributes.
 
 package base
+
+import (
+	"encoding/xml"
+)
 
 // The primary official name of an aerodrome as designated by an appropriate authority. [AIXM 5.1]
 type AerodromeNameType TextNameType
@@ -86,10 +91,14 @@ type AerodromeReferenceType struct {
 	ReferencePoint *GeographicalPositionType `xml:"referencePoint"`
 	// The location of an aerodrome expressed as a relative point.
 	ReferenceRelativePoint *RelativePointType `xml:"referenceRelativePoint"`
+	// Hypertextreference
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // A published sequence of characters allowing the identification of the airspace. [AIXM 5.1]
 type AirspaceDesignatorType struct {
+    Value string
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // A reference to an area control centre, approach control unit or aerodrome control tower being either:
@@ -106,7 +115,8 @@ type AtcUnitReferenceType struct {
 	LocationIndicator *LocationIndicatorType `xml:"locationIndicator"`
 	// The geographical point of the Unit. [AIXM 5.1]
 	Position *GeographicalPositionType `xml:"position"`
-	// TODO href missing
+	// Hypertextreference
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // A named geographical location used in defining an ATS route, the flight path of an aircraft or for other navigation or ATS purposes. [FIXM]
@@ -123,7 +133,8 @@ type DesignatedPointType struct {
 	// This optional field may be used to achieve unambiguous reference to the designated point. 
 	// The combinations of fields that would make the reference unique are name + position
 	Position *GeographicalPositionType `xml:"position"`
-	// TODO href
+	// Hypertextreference
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // An unnamed point designated only with a set of coordinates - latitude/longitude. [FIXM]
@@ -134,9 +145,8 @@ type GeographicalPositionType struct {
 	Extension []GeographicalPositionExtensionType `xml:"extension"`
 	// This list of doubles contains the latitude and longitude of the location in order of LATITUDE FIRST, THEN LONGITUDE.
 	Pos LatLongPosType `xml:"pos"`
-	// TODO
-	// Think we are missing srsName
-	// Names the coordinate reference system (CRS) that defines the semantics of the lat/long pair according to the ISO6709 standard. FIXM uses only "urn:ogc:def:crs:EPSG::4326".
+	// Names the coordinate reference system (CRS) that defines the semantics of the lat/long pair
+    SrsName string `xml:"srsName,attr,omitempty"`
 }
 
 // A radio navigation aid used in defining an ATS route, the flight path of an aircraft or for other navigation or ATS purposes. [FIXM]
@@ -157,7 +167,8 @@ type NavaidType struct {
 	// This optional field may be used to achieve unambiguous reference to the navaid. 
 	// The combinations of fields that would make the reference unique are name + position + navaid service type.
 	Position *GeographicalPositionType `xml:"position"`
-	// TODO href
+	// Hypertextreference
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // Bearing and distance from a reference point. [ICAO Doc 4444, Appendix 2, ITEM 15]
@@ -178,12 +189,14 @@ type RelativePointType struct {
 
 // The coded designator for a published ATS route or route segment.
 type RouteDesignatorType struct {
-	// TODO href
+    Value string
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // - A number between 01 and 36 - Optionally Left (L), Center (C), or Right (R)
 type RunwayDirectionDesignatorType struct {
-	// TODO href
+    Value string
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // A reference to a SID or a STAR. [FIXM]
@@ -194,7 +207,8 @@ type SidStarReferenceType struct {
 	Designator SidStarDesignatorType `xml:"designator"`
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []SidStarReferenceExtensionType `xml:"extension"`
-	//TODO href
+	// Hypertextreference
+    Href string `xml:"href,attr,omitempty"`
 }
 
 // A location type restricted to lat/long location, named location, or reference location.
@@ -211,3 +225,119 @@ type SignificantPointChoiceType struct {
 	RelativePoint RelativePointType `xml:"relativePoint"`
 }
 
+// Custom XML unmarshaler for RouteDesignatorType
+func (r *RouteDesignatorType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+    // Get href attribute if present
+    for _, attr := range start.Attr {
+        if attr.Name.Local == "href" {
+            r.Href = attr.Value
+        }
+    }
+
+    // Decode element content as string
+    var content string
+    if err := d.DecodeElement(&content, &start); err != nil {
+        return err
+    }
+    r.Value = content
+    return nil
+}
+
+// Custom XML marshaler for RouteDesignatorType
+func (r RouteDesignatorType) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+    // Add href attribute if present
+    if r.Href != "" {
+        start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "href"}, Value: r.Href})
+    }
+
+    // Start element
+    if err := e.EncodeToken(start); err != nil {
+        return err
+    }
+
+    // Write content
+    if err := e.EncodeToken(xml.CharData(r.Value)); err != nil {
+        return err
+    }
+
+    // End element
+    return e.EncodeToken(start.End())
+}
+
+// Custom XML unmarshaler for RunwayDirectionDesignatorType
+func (r *RunwayDirectionDesignatorType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+    // Get href attribute if present
+    for _, attr := range start.Attr {
+        if attr.Name.Local == "href" {
+            r.Href = attr.Value
+        }
+    }
+
+    // Decode element content as string
+    var content string
+    if err := d.DecodeElement(&content, &start); err != nil {
+        return err
+    }
+    r.Value = content
+    return nil
+}
+
+// Custom XML marshaler for RunwayDirectionDesignatorType
+func (r RunwayDirectionDesignatorType) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+    // Add href attribute if present
+    if r.Href != "" {
+        start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "href"}, Value: r.Href})
+    }
+
+    // Start element
+    if err := e.EncodeToken(start); err != nil {
+        return err
+    }
+
+    // Write content
+    if err := e.EncodeToken(xml.CharData(r.Value)); err != nil {
+        return err
+    }
+
+    // End element
+    return e.EncodeToken(start.End())
+}
+
+// Custom XML unmarshaler for AirspaceDesignatorType
+func (a *AirspaceDesignatorType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+    // Get href attribute if present
+    for _, attr := range start.Attr {
+        if attr.Name.Local == "href" {
+            a.Href = attr.Value
+        }
+    }
+
+    // Decode element content as string
+    var content string
+    if err := d.DecodeElement(&content, &start); err != nil {
+        return err
+    }
+    a.Value = content
+    return nil
+}
+
+// Custom XML marshaler for AirspaceDesignatorType
+func (a AirspaceDesignatorType) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+    // Add href attribute if present
+    if a.Href != "" {
+        start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "href"}, Value: a.Href})
+    }
+
+    // Start element
+    if err := e.EncodeToken(start); err != nil {
+        return err
+    }
+
+    // Write content
+    if err := e.EncodeToken(xml.CharData(a.Value)); err != nil {
+        return err
+    }
+
+    // End element
+    return e.EncodeToken(start.End())
+}

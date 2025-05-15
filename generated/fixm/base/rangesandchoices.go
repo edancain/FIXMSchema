@@ -1,6 +1,11 @@
 // Code generated from RangesAndChoices.xsd; DO NOT EDIT.
+// Modified manually to fix choice types issues.
 
 package base
+
+import (
+	//"fmt"
+)
 
 // Indicates that no specific altitude has been provided for a flight operated under visual flight rules.
 type VisualFlightRulesLevelType string
@@ -12,74 +17,126 @@ const (
 // The Choice between flight level or altitude specification.
 type FlightLevelOrAltitudeChoiceType struct {
 	// Altitude specification.
-	Altitude AltitudeType `xml:"altitude"`
+	Altitude *AltitudeType `xml:"altitude,omitempty"`
 	// Flight Level specification.
-	FlightLevel FlightLevelType `xml:"flightLevel"`
+	FlightLevel *FlightLevelType `xml:"flightLevel,omitempty"`
 }
 
 // Represent either a specific level or a level range with a lower and/or upper bound.
 type FlightLevelOrAltitudeOrRangeChoiceType struct {
 	// Altitude specification.
-	Altitude AltitudeType `xml:"altitude"`
+	Altitude *AltitudeType `xml:"altitude,omitempty"`
 	// Flight Level specification.
-	FlightLevel FlightLevelType `xml:"flightLevel"`
+	FlightLevel *FlightLevelType `xml:"flightLevel,omitempty"`
 	// A vertical range with a lower and/or upper bound.
-	Range VerticalRangeType `xml:"range"`
+	Range *VerticalRangeType `xml:"range,omitempty"`
 }
 
 // A choice between flight level or altitude or VFR specification.
 type FlightLevelOrAltitudeOrVfrChoiceType struct {
 	// Altitude specification.
-	Altitude AltitudeType `xml:"altitude"`
+	Altitude *AltitudeType `xml:"altitude,omitempty"`
 	// Flight Level specification.
-	FlightLevel FlightLevelType `xml:"flightLevel"`
+	FlightLevel *FlightLevelType `xml:"flightLevel,omitempty"`
 	// Visual Flight Rules specification.
-	VisualFlightRules VisualFlightRulesLevelType `xml:"visualFlightRules"`
+	VisualFlightRules VisualFlightRulesLevelType `xml:"visualFlightRules,omitempty"`
 }
 
-// Represent either a specific time or a time range with a lower and/or upper boound.
+// Represent either a specific time or a time range with a lower and/or upper bound.
 type TimeChoiceType struct {
 	// Represents a time range with a lower and/or upper bound.
-	Range TimeRangeType `xml:"range"`
+	Range *TimeRangeType `xml:"range,omitempty"`
 	// A specific time value.
-	Value DateTimeUtcType `xml:"value"`
+	Value *DateTimeUtcType `xml:"value,omitempty"`
 }
 
 // Represents a time range with a lower and/or upper bound.
 type TimeRangeType struct {
 	// Lower bound of the time range.
-	Earliest *DateTimeUtcType `xml:"earliest"`
+	Earliest *DateTimeUtcType `xml:"earliest,omitempty"`
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []TimeRangeExtensionType `xml:"extension"`
+	Extension []TimeRangeExtensionType `xml:"extension,omitempty"`
 	// Upper bound of the time range.
-	Latest *DateTimeUtcType `xml:"latest"`
+	Latest *DateTimeUtcType `xml:"latest,omitempty"`
 }
 
 // Represent either a specific true airspeed or a true airspeed range with a lower and/or upper bound.
 type TrueAirspeedChoiceType struct {
 	// Represents a true airspeed range with a lower and/or upper bound.
-	Range TrueAirspeedRangeType `xml:"range"`
+	Range *TrueAirspeedRangeType `xml:"range,omitempty"`
 	// A specific true airspeed value.
-	Value TrueAirspeedType `xml:"value"`
+	Value *TrueAirspeedType `xml:"value,omitempty"`
 }
 
 // Represents a true airspeed range with a lower and/or upper bound.
 type TrueAirspeedRangeType struct {
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []TrueAirspeedRangeExtensionType `xml:"extension"`
+	Extension []TrueAirspeedRangeExtensionType `xml:"extension,omitempty"`
 	// Lower bound of the true airspeed range.
-	LowerSpeed *TrueAirspeedType `xml:"lowerSpeed"`
+	LowerSpeed *TrueAirspeedType `xml:"lowerSpeed,omitempty"`
 	// Upper bound of the true airspeed range.
-	UpperSpeed *TrueAirspeedType `xml:"upperSpeed"`
+	UpperSpeed *TrueAirspeedType `xml:"upperSpeed,omitempty"`
 }
 
 // Represents a vertical range with a lower and/or upper bound.
 type VerticalRangeType struct {
 	// An extension hook for attaching extension (non-core) classes.
-	Extension []VerticalRangeExtensionType `xml:"extension"`
+	Extension []VerticalRangeExtensionType `xml:"extension,omitempty"`
 	// Lower bound of the vertical range.
-	LowerBound *FlightLevelOrAltitudeChoiceType `xml:"lowerBound"`
+	LowerBound *FlightLevelOrAltitudeChoiceType `xml:"lowerBound,omitempty"`
 	// Upper bound of the vertical range.
-	UpperBound *FlightLevelOrAltitudeChoiceType `xml:"upperBound"`
+	UpperBound *FlightLevelOrAltitudeChoiceType `xml:"upperBound,omitempty"`
 }
 
+// Helper methods to check which choice is set in FlightLevelOrAltitudeChoiceType
+func (c *FlightLevelOrAltitudeChoiceType) IsAltitudeSet() bool {
+	return c != nil && c.Altitude != nil
+}
+
+func (c *FlightLevelOrAltitudeChoiceType) IsFlightLevelSet() bool {
+	return c != nil && c.FlightLevel != nil
+}
+
+// Helper methods for FlightLevelOrAltitudeOrVfrChoiceType
+func (c *FlightLevelOrAltitudeOrVfrChoiceType) IsAltitudeSet() bool {
+	return c != nil && c.Altitude != nil
+}
+
+func (c *FlightLevelOrAltitudeOrVfrChoiceType) IsFlightLevelSet() bool {
+	return c != nil && c.FlightLevel != nil
+}
+
+func (c *FlightLevelOrAltitudeOrVfrChoiceType) IsVFRSet() bool {
+	return c != nil && string(c.VisualFlightRules) != ""
+}
+
+// Helper methods for FlightLevelOrAltitudeOrRangeChoiceType
+func (c *FlightLevelOrAltitudeOrRangeChoiceType) IsAltitudeSet() bool {
+	return c != nil && c.Altitude != nil
+}
+
+func (c *FlightLevelOrAltitudeOrRangeChoiceType) IsFlightLevelSet() bool {
+	return c != nil && c.FlightLevel != nil
+}
+
+func (c *FlightLevelOrAltitudeOrRangeChoiceType) IsRangeSet() bool {
+	return c != nil && c.Range != nil
+}
+
+// Helper methods for TimeChoiceType
+func (t *TimeChoiceType) IsRangeSet() bool {
+	return t != nil && t.Range != nil
+}
+
+func (t *TimeChoiceType) IsValueSet() bool {
+	return t != nil && t.Value != nil
+}
+
+// Helper methods for TrueAirspeedChoiceType
+func (t *TrueAirspeedChoiceType) IsRangeSet() bool {
+	return t != nil && t.Range != nil
+}
+
+func (t *TrueAirspeedChoiceType) IsValueSet() bool {
+	return t != nil && t.Value != nil
+}

@@ -37,6 +37,7 @@ type ActualTimeOfDepartureType struct {
 
 // Groups information pertaining to the flight's departure.
 type DepartureType struct {
+	Aerodrome *base.AerodromeReferenceType `xml:"aerodrome,omitempty"`
 	// The time, type of time (wheels-off, off blocks, etc.), and geographical position of the departure.  [FIXM]
 	ActualTimeOfDeparture *ActualTimeOfDepartureType `xml:"actualTimeOfDeparture"`
 	// Identifies a flight that has filed its flight plan while in the air, beginning its route description from a specified point en-route, and therefore may not have provided a departure aerodrome.
@@ -50,7 +51,7 @@ type DepartureType struct {
 	// An alternate aerodrome at which an aircraft can land should this become necessary shortly after take-off and it is not possible to use the aerodrome of departure. [ICAO Doc 4444]
 	TakeoffAlternateAerodrome []base.AerodromeReferenceType `xml:"takeoffAlternateAerodrome"`
 	// The aerodrome from which the flight departs. [FIXM]
-	DepartureAerodrome *base.AerodromeReferenceType `xml:"departureAerodrome"`
+	DepartureAerodrome *base.AerodromeReferenceType `xml:"departureAerodrome,omitempty"`
 	// The first point of the route, for use when a departure aerodrome does not exist (such as when the flight plan is filed from the air) or is otherwise unknown.
 	DeparturePoint *DeparturePointChoiceType `xml:"departurePoint"`
 	// Specifies the previous departure aerodrome value when a change is made.
@@ -77,5 +78,19 @@ type DeparturePointChoiceType struct {
 	Position base.GeographicalPositionType `xml:"position"`
 	// Bearing and distance from a reference point. [ICAO Doc 4444, Appendix 2, ITEM 15]
 	RelativePoint base.RelativePointType `xml:"relativePoint"`
+}
+
+// Add a helper method to get the effective aerodrome regardless of which field is used
+func (d *DepartureType) GetAerodrome() *base.AerodromeReferenceType {
+    if d.DepartureAerodrome != nil {
+        return d.DepartureAerodrome
+    }
+    return d.Aerodrome
+}
+
+// Add a helper method to set the aerodrome in both fields for compatibility
+func (d *DepartureType) SetAerodrome(aerodrome *base.AerodromeReferenceType) {
+    d.DepartureAerodrome = aerodrome
+    d.Aerodrome = aerodrome
 }
 

@@ -62,7 +62,7 @@ type RouteChangeType struct {
 	// An extension hook for attaching extension (non-core) classes.
 	Extension []base.RouteChangeExtensionType `xml:"extension"`
 	// The planned altitude that the aircraft will change to upon reaching the associated Significant Point along its Route.
-	Level *CruisingLevelChangeType `xml:"level"`
+	Level *CruisingLevelChangeType `xml:"level,omitempty"`
 	// The planned speed  that the aircraft will change to upon reaching the associated Significant Point along its Route.
 	Speed *CruisingSpeedChangeType `xml:"speed"`
 }

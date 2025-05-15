@@ -89,3 +89,23 @@ type UniversallyUniqueIdentifierType struct {
 	CodeSpace string `xml:"codeSpace"` // Code Space of the UUID
 }
 
+// Helper methods for DateTimeUtcType
+func (dt *DateTimeUtcType) IsZero() bool {
+	if dt == nil {
+		return true
+	}
+	
+	// Since DateTimeUtcType is essentially a time.Time
+	t := time.Time(*dt)
+	return t.IsZero()
+}
+
+func (dt *DateTimeUtcType) Format() string {
+	if dt == nil || dt.IsZero() {
+		return "undefined"
+	}
+	
+	// Convert to time.Time and format
+	t := time.Time(*dt)
+	return t.Format("2006-01-02T15:04:05Z")
+}

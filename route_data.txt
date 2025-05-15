@@ -1,0 +1,438 @@
+File size: 11024 bytes
+Detected XML fragment, adding XML wrapper...
+Found RouteTrajectoryGroup element in document
+
+Route Trajectory Information:
+Desired Route:
+  Route Trajectory Details:
+  {
+    ClimbProfile:     <nil>
+    ClimbSchedule:     <nil>
+    DescentProfile:     <nil>
+    DescentSchedule:     <nil>
+    Element: [
+            {
+        AlongRouteDistance:         {
+        }
+        Constraint: []
+        ElementStartPoint:         {
+          AerodromeReferencePoint:           {
+            Extension: []
+            IataDesignator:             <nil>
+            LocationIndicator: "KHGR"
+            Name:             <nil>
+            ReferencePoint:             {
+              Extension: []
+              Pos: [
+                39.70861111
+                -77.72638889
+              ]
+            }
+            ReferenceRelativePoint:             <nil>
+          }
+          DesignatedPoint:           {
+            Designator: ""
+            Extension: []
+            Position:             <nil>
+          }
+          Navaid:           {
+            Designator: ""
+            Extension: []
+            NavaidServiceType:             <nil>
+            Position:             <nil>
+          }
+          Position:           {
+            Extension: []
+            Pos: []
+          }
+          RelativePoint:           {
+            Bearing:             {
+              ZeroBearingType: ""
+            }
+            Distance:             {
+            }
+            Extension: []
+            Position:             <nil>
+            ReferencePoint:             {
+              Designator: ""
+              Extension: []
+              NavaidServiceType:               <nil>
+              Position:               <nil>
+            }
+          }
+        }
+        Extension: []
+        FlightRulesChange:         <nil>
+        Modified:         <nil>
+        ModifiedRouteItemReference:         <nil>
+        PlannedDelay:         <nil>
+        Point4D:         {
+          AltimeterSetting:           <nil>
+          Extension: []
+          Level:           {
+            Altitude:             {
+              UOM:               <nil>
+            }
+            FlightLevel:             {
+              UOM: ""
+            }
+          }
+          MetData:           <nil>
+          PointProperty: [
+                        {
+              Description:               <nil>
+              Extension: []
+              PropertyType: "AIRPORT_REFERENCE_LOCATION"
+              Reference:               <nil>
+            }
+                        {
+              Description:               <nil>
+              Extension: []
+              PropertyType: "INITIAL_PREDICTION_POINT"
+              Reference:               <nil>
+            }
+          ]
+          Position:           {
+            Extension: []
+            Pos: [
+              39.70861111
+              -77.72638889
+            ]
+          }
+          PredictedAirspeed:           {
+            UOM: ""
+          }
+          PredictedGroundspeed:           <nil>
+          Time:           {
+            AbsoluteTime:             {
+            }
+            RelativeTimeFromInitialPredictionPoint: 0
+          }
+          VerticalRange:           <nil>
+        }
+        RouteChange:         <nil>
+        RouteDesignatorToNextElement:         {
+          OtherRouteDesignator: "DIRECT"
+          RouteDesignator:           {
+          }
+          StandardInstrumentArrival:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+          StandardInstrumentDeparture:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+        }
+        RouteTruncationIndicator:         <nil>
+      }
+            {
+        AlongRouteDistance:         {
+        }
+        Constraint: []
+        ElementStartPoint:         {
+          AerodromeReferencePoint:           {
+            Extension: []
+            IataDesignator:             <nil>
+            LocationIndicator:             <nil>
+            Name:             <nil>
+            ReferencePoint:             <nil>
+            ReferenceRelativePoint:             <nil>
+          }
+          DesignatedPoint:           {
+            Designator: ""
+            Extension: []
+            Position:             <nil>
+          }
+          Navaid:           {
+            Designator: "HGR"
+            Extension: []
+            NavaidServiceType:             <nil>
+            Position:             {
+              Extension: []
+              Pos: [
+                39.69777778
+                -77.85583333
+              ]
+            }
+          }
+          Position:           {
+            Extension: []
+            Pos: []
+          }
+          RelativePoint:           {
+            Bearing:             {
+              ZeroBearingType: ""
+            }
+            Distance:             {
+            }
+            Extension: []
+            Position:             <nil>
+            ReferencePoint:             {
+              Designator: ""
+              Extension: []
+              NavaidServiceType:               <nil>
+              Position:               <nil>
+            }
+          }
+        }
+        Extension: []
+        FlightRulesChange:         <nil>
+        Modified:         <nil>
+        ModifiedRouteItemReference:         <nil>
+        PlannedDelay:         <nil>
+        Point4D:         {
+          AltimeterSetting:           <nil>
+          Extension: []
+          Level:           {
+            Altitude:             {
+              UOM:               <nil>
+            }
+            FlightLevel:             {
+              UOM: ""
+            }
+          }
+          MetData:           <nil>
+          PointProperty: [
+                        {
+              Description:               <nil>
+              Extension: []
+              PropertyType: "TCP_LATERAL"
+              Reference:               <nil>
+            }
+          ]
+          Position:           {
+            Extension: []
+            Pos: [
+              39.70861111
+              -77.72638889
+            ]
+          }
+          PredictedAirspeed:           {
+            UOM: ""
+          }
+          PredictedGroundspeed:           <nil>
+          Time:           {
+            AbsoluteTime:             {
+            }
+            RelativeTimeFromInitialPredictionPoint: 155000000000
+          }
+          VerticalRange:           <nil>
+        }
+        RouteChange:         <nil>
+        RouteDesignatorToNextElement:         {
+          OtherRouteDesignator: ""
+          RouteDesignator:           {
+          }
+          StandardInstrumentArrival:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+          StandardInstrumentDeparture:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+        }
+        RouteTruncationIndicator:         <nil>
+      }
+            {
+        AlongRouteDistance:         {
+        }
+        Constraint: []
+        ElementStartPoint:         <nil>
+        Extension: []
+        FlightRulesChange:         <nil>
+        Modified:         <nil>
+        ModifiedRouteItemReference:         <nil>
+        PlannedDelay:         <nil>
+        Point4D:         {
+          AltimeterSetting:           <nil>
+          Extension: []
+          Level:           {
+            Altitude:             {
+              UOM:               <nil>
+            }
+            FlightLevel:             {
+              UOM: ""
+            }
+          }
+          MetData:           <nil>
+          PointProperty: []
+          Position:           {
+            Extension: []
+            Pos: [
+              39.67722222
+              -77.76583333
+            ]
+          }
+          PredictedAirspeed:           {
+            UOM: ""
+          }
+          PredictedGroundspeed:           <nil>
+          Time:           {
+            AbsoluteTime:             {
+            }
+            RelativeTimeFromInitialPredictionPoint: 283000000000
+          }
+          VerticalRange:           <nil>
+        }
+        RouteChange:         <nil>
+        RouteDesignatorToNextElement:         {
+          OtherRouteDesignator: ""
+          RouteDesignator:           {
+          }
+          StandardInstrumentArrival:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+          StandardInstrumentDeparture:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+        }
+        RouteTruncationIndicator:         <nil>
+      }
+            {
+        AlongRouteDistance:         {
+        }
+        Constraint: []
+        ElementStartPoint:         <nil>
+        Extension: []
+        FlightRulesChange:         <nil>
+        Modified:         <nil>
+        ModifiedRouteItemReference:         <nil>
+        PlannedDelay:         <nil>
+        Point4D:         {
+          AltimeterSetting:           <nil>
+          Extension: []
+          Level:           {
+            Altitude:             {
+              UOM:               <nil>
+            }
+            FlightLevel:             {
+              UOM: ""
+            }
+          }
+          MetData:           <nil>
+          PointProperty: [
+                        {
+              Description:               <nil>
+              Extension: []
+              PropertyType: "TOP_OF_CLIMB"
+              Reference:               <nil>
+            }
+          ]
+          Position:           {
+            Extension: []
+            Pos: [
+              39.66833333
+              -77.72666667
+            ]
+          }
+          PredictedAirspeed:           {
+            UOM: ""
+          }
+          PredictedGroundspeed:           <nil>
+          Time:           {
+            AbsoluteTime:             {
+            }
+            RelativeTimeFromInitialPredictionPoint: 335000000000
+          }
+          VerticalRange:           <nil>
+        }
+        RouteChange:         <nil>
+        RouteDesignatorToNextElement:         {
+          OtherRouteDesignator: ""
+          RouteDesignator:           {
+          }
+          StandardInstrumentArrival:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+          StandardInstrumentDeparture:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+        }
+        RouteTruncationIndicator:         <nil>
+      }
+            {
+        AlongRouteDistance:         {
+        }
+        Constraint: []
+        ElementStartPoint:         <nil>
+        Extension: []
+        FlightRulesChange:         <nil>
+        Modified:         <nil>
+        ModifiedRouteItemReference:         <nil>
+        PlannedDelay:         <nil>
+        Point4D:         {
+          AltimeterSetting:           <nil>
+          Extension: []
+          Level:           {
+            Altitude:             {
+              UOM:               <nil>
+            }
+            FlightLevel:             {
+              UOM: ""
+            }
+          }
+          MetData:           <nil>
+          PointProperty: [
+                        {
+              Description:               <nil>
+              Extension: []
+              PropertyType: "TCP_SPEED"
+              Reference:               <nil>
+            }
+          ]
+          Position:           {
+            Extension: []
+            Pos: [
+              39.66333333
+              -77.70416667
+            ]
+          }
+          PredictedAirspeed:           {
+            UOM: ""
+          }
+          PredictedGroundspeed:           <nil>
+          Time:           {
+            AbsoluteTime:             {
+            }
+            RelativeTimeFromInitialPredictionPoint: 362000000000
+          }
+          VerticalRange:           <nil>
+        }
+        RouteChange:         <nil>
+        RouteDesignatorToNextElement:         {
+          OtherRouteDesignator: ""
+          RouteDesignator:           {
+          }
+          StandardInstrumentArrival:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+          StandardInstrumentDeparture:           {
+            AbbreviatedDesignator:             <nil>
+            Designator: ""
+            Extension: []
+          }
+        }
+        RouteTruncationIndicator:         <nil>
+      }
+      ... (6 more items)
+    ]
+    Extension: []
+    RouteInformation:     <nil>
+    TakeoffMass:     <nil>
+  }

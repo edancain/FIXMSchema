@@ -1,0 +1,6 @@
+<!--xmlns:fx="http://www.fixm.aero/flight/4.3"-->
+<fx:arrival>
+   <fx:destinationAerodrome>
+      <fb:locationIndicator>KBWI</fb:locationIndicator>
+   </fx:destinationAerodrome>
+</fx:arrival>
