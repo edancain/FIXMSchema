@@ -6,8 +6,8 @@ This is an explanation to list and detail the issues encountered in the XML Sche
 
 The primary issues included incorrect handling of XML choice elements, poor representation of simple types with attributes, lack of proper helper methods, and struct vs. nil comparison issues.
 
-1. XML Schema Concepts and Their Go Representations
-    1.1 Simple Types with Attributes (complexType with simpleContent)
+**1. XML Schema Concepts and Their Go Representations**
+    **1.1 Simple Types with Attributes (complexType with simpleContent)**
 
     Problem
     In XML Schema, a "simple type with attributes" is represented as a complexType with simpleContent. This allows a type to have both a text value and attributes. 
@@ -60,7 +60,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     This pattern I applied to several types, including FlightLevelType, IndicatedAirspeedType, TrueAirspeedType, and MassType.
 
-    1.2 Choice Elements (xs:choice)
+    **1.2 Choice Elements (xs:choice)**
     Problem
     XML Schema uses the xs:choice element to indicate that only one of several possible child elements should be present. 
 
@@ -162,7 +162,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
         }
     }
 
-    1.3 Date/Time Types and Helper Methods
+    **1.3 Date/Time Types and Helper Methods**
     Problem
     The generated code included types like DateTimeUtcType but lacked helper methods for checking if the time is zero or for formatting the time as a string.
 
@@ -191,7 +191,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     These methods made / make it easier to work with date/time values, especially when determining if a value is set or formatting it for display.
 
-    1.4 Struct vs. Nil Comparison Issues
+    **1.4 Struct vs. Nil Comparison Issues**
     Problem
     In Go, only pointer types, slices, maps, channels, functions, and interfaces can be nil. Struct types cannot be nil - they always have a valid zero value. However, the code had comparisons like:
 
@@ -209,7 +209,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     This correctly checks if a specific field (which is a pointer) is non-nil, rather than trying to check if the struct itself is nil.
 
-    1.5 Inconsistent Type Implementations
+    **1.5 Inconsistent Type Implementations**
     Problem
     The generated code had inconsistent implementations for similar types. Some types like RouteDesignatorType had a Value field with proper XML tags, while others like AltitudeType didn't. Some types used pointer fields for optional elements, while others used value types.
 
@@ -230,10 +230,10 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     But I had to add similar structures to a greeat deal of other types.
 
-2. Main.go Fixes
+**2. Main.go Fixes**
     The main.go file needed several updates to work with the fixed types:
 
-    2.1 Accessing Value Fields
+    **2.1 Accessing Value Fields**
     I changed code like:
 
     fmt.Printf("Altitude: %v", *elem.Point4D.Level.Altitude)
@@ -243,7 +243,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     This correctly accesses the Value field in types that have text content.
 
-    2.2 Using Helper Methods for Choice Types
+    **2.2 Using Helper Methods for Choice Types**
     I updated the code to use the helper methods:
 
     if elem.Point4D.Level.IsAltitudeSet() {
@@ -252,7 +252,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
         fmt.Printf("Flight Level: FL%v", elem.Point4D.Level.FlightLevel.Value)
     }
 
-    2.3 UOM Field Handling
+    **2.3 UOM Field Handling**
     I fixed UOM field handling (I puzzled this over for awhile!):
 
     // Changed from:
@@ -267,7 +267,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     This correctly treats UOM as a string, not a pointer!
 
-    2.4 Inconsistent Type Access
+    **2.4 Inconsistent Type Access**
     I discovered that some types had different implementations than others:
 
     // Some types like RouteDesignator had a Value field:
@@ -281,8 +281,8 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
     I updated the code to handle each type correctly.
 
-3. Why These Patterns Matter in Go
-    3.1 Representing XML in Go
+**3. Why These Patterns Matter in Go**
+    **3.1 Representing XML in Go**
     XML and Go have different data models. XML is hierarchical with elements, attributes, and text content, while Go has structs, fields, and tags. Mapping between them requires careful approach to thedesign:
 
     Simple vs. Complex Content:
@@ -306,7 +306,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
     To check if a struct field is "set", examine specific pointer fields within it.
 
 
-    3.2 XML Marshaling in Go
+    **3.2 XML Marshaling in Go**
     Go's standard library provides XML marshaling, but it has limitations:
 
     Field Tags:
@@ -325,7 +325,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
 
 
-4. Generator Improvements for Future Integration
+**4. Generator Improvements for Future Integration**
     The XML Schema to Go code generator has several deficiencies that should be addressed:
     4.1 Issues to Fix in the Generator
 
@@ -363,7 +363,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
 
 
-    4.2 Implementation Strategy for Generator Improvements
+    **4.2 Implementation Strategy for Generator Improvements**
     To fix the generator, we would need to:
 
     Analyze the XML Schema to properly identify:
@@ -396,7 +396,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
 
 
-    4.3 Key Topics for Future Discussion
+    **4.3 Key Topics for Future Discussion**
     In a future conversation to improve the generator, we should focus on:
 
     Schema Analysis:
@@ -433,7 +433,7 @@ The primary issues included incorrect handling of XML choice elements, poor repr
 
 
 
-5. Conclusion
+**5. Conclusion**
     The issues encountered in the FIXM Schema to Go code conversion highlights the challenges of mapping between XML Schema and Go. The solutions implemented provides a foundation (it needs more work, all fixes afterward have been manual) for better handling of these conversions. 
 
     By understanding the patterns and techniques discussed in this report, we should be able to create a more robust and maintainable code solution for processing FIXM data.
