@@ -1,0 +1,145 @@
+Found RouteTrajectoryGroup element in document
+
+Route Trajectory Information:
+DEBUG: In printRouteTrajectoryGroupInfo
+Desired Route:
+  Route Trajectory Details:
+
+  Element 0:
+    AlongRouteDistance: {0 NM}
+    Start Point:
+      Aerodrome: KHGR
+      Position: Lat 39.708611, Lon -77.726389
+    4D Point Information:
+      Altitude: {703 FT} FT
+      Position: Lat 39.708611, Lon -77.726389
+      Predicted Airspeed: {125 KT} KT
+      Point Properties:
+        - AIRPORT_REFERENCE_LOCATION
+        - INITIAL_PREDICTION_POINT
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 1:
+    AlongRouteDistance: {6.02 NM}
+    Start Point:
+      Navaid: HGR
+      Position: Lat 39.697778, Lon -77.855833
+    4D Point Information:
+      Altitude: {2732 FT} FT
+      Position: Lat 39.708611, Lon -77.726389
+      Relative Time: 2m 35s
+      Predicted Airspeed: {125 KT} KT
+      Point Properties:
+        - TCP_LATERAL
+    Route to Next Element:
+      Airway: V268
+
+  Element 2:
+    AlongRouteDistance: {10.35 NM}
+    4D Point Information:
+      Altitude: {4389 FT} FT
+      Position: Lat 39.677222, Lon -77.765833
+      Relative Time: 4m 43s
+      Predicted Airspeed: {125 KT} KT
+    Route to Next Element:
+      Airway: V268
+
+  Element 3:
+    AlongRouteDistance: {12.18 NM}
+    4D Point Information:
+      Altitude: {5000 FT} FT
+      Position: Lat 39.668333, Lon -77.726667
+      Relative Time: 5m 35s
+      Predicted Airspeed: {125 KT} KT
+      Point Properties:
+        - TOP_OF_CLIMB
+    Route to Next Element:
+      Airway: V268
+
+  Element 4:
+    AlongRouteDistance: {13.26 NM}
+    4D Point Information:
+      Altitude: {5000 FT} FT
+      Position: Lat 39.663333, Lon -77.704167
+      Relative Time: 6m 2s
+      Predicted Airspeed: {160 KT} KT
+      Point Properties:
+        - TCP_SPEED
+    Route to Next Element:
+      Airway: V268
+
+  Element 5:
+    AlongRouteDistance: {34.48 NM}
+    Start Point:
+      Designated Point: KEMAR
+      Position: Lat 39.562500, Lon -77.267222
+    4D Point Information:
+      Altitude: {5000 FT} FT
+      Position: Lat 39.562500, Lon -77.267222
+      Relative Time: 13m 56s
+      Predicted Airspeed: {160 KT} KT
+    Route to Next Element:
+      Airway: V268
+
+  Element 6:
+    AlongRouteDistance: {48.49 NM}
+    Start Point:
+      Navaid: EMI
+      Position: Lat 39.495000, Lon -76.978611
+    4D Point Information:
+      Altitude: {5000 FT} FT
+      Position: Lat 39.495000, Lon -76.978611
+      Relative Time: 19m 2s
+      Predicted Airspeed: {160 KT} KT
+      Point Properties:
+        - TCP_LATERAL
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 7:
+    AlongRouteDistance: {51.18 NM}
+    4D Point Information:
+      Altitude: {5000 FT} FT
+      Position: Lat 39.457222, Lon -76.941667
+      Relative Time: 20m 1s
+      Predicted Airspeed: {160 KT} KT
+      Point Properties:
+        - TOP_OF_DESCENT
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 8:
+    AlongRouteDistance: {51.84 NM}
+    4D Point Information:
+      Altitude: {4852 FT} FT
+      Position: Lat 39.448333, Lon -76.933056
+      Relative Time: 20m 15s
+      Predicted Airspeed: {160 KT} KT
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 9:
+    AlongRouteDistance: {71.52 NM}
+    4D Point Information:
+      Altitude: {366 FT} FT
+      Position: Lat 39.187778, Lon -76.680556
+      Relative Time: 26m 55s
+      Predicted Airspeed: {120 KT} KT
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 10:
+    AlongRouteDistance: {72.45 NM}
+    Start Point:
+      Aerodrome: KBWI
+      Position: Lat 39.175833, Lon -76.668889
+    4D Point Information:
+      Altitude: {143 FT} FT
+      Position: Lat 39.175833, Lon -76.668889
+      Relative Time: 27m 15s
+      Predicted Airspeed: {100 KT} KT
+      Point Properties:
+        - AIRPORT_REFERENCE_LOCATION
+        - END_PREDICTION_POINT
+DEBUG: Exiting printRouteTrajectoryGroupInfo

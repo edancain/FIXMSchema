@@ -85,7 +85,7 @@ func listSampleFiles() []string {
 	var files []string
 
 	// Look for sample_messages directory
-	samplesDir := "sample_messages"
+	samplesDir := "sample_messages/4.3"
 	if _, err := os.Stat(samplesDir); err != nil {
 		return files
 	}
@@ -115,13 +115,46 @@ func processFiles(files []string) {
 }
 
 func processFile(filePath string) {
+	// Create output file path
+	baseName := filepath.Base(filePath)
+	outputFileName := strings.TrimSuffix(baseName, filepath.Ext(baseName)) + "_output.txt"
+	outputDir := "output"
+
+	// Create output directory if it doesn't exist
+	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+		os.Mkdir(outputDir, 0755)
+	}
+
+	outputPath := filepath.Join(outputDir, outputFileName)
+
+	// Create output file
+	outputFile, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Printf("Error creating output file: %v\n", err)
+		return
+	}
+	defer outputFile.Close()
+
 	// Build and execute the parser command
 	cmd := exec.Command("go", "run", "cmd/fixmparser/main.go", filePath)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
-	err := cmd.Run()
+	// Capture command output to a buffer
+	output, err := cmd.CombinedOutput()
+
+	// Display output on the console
+	fmt.Println(string(output))
+
 	if err != nil {
 		fmt.Printf("Error processing file: %v\n", err)
+		// Error is already in the output variable
 	}
+
+	// Write output to the file (includes both stdout and stderr)
+	_, err = outputFile.Write(output)
+	if err != nil {
+		fmt.Printf("Error writing to output file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("Output saved to %s\n", outputPath)
 }

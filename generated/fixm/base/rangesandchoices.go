@@ -4,7 +4,7 @@
 package base
 
 import (
-	//"fmt"
+	"encoding/xml"
 )
 
 // Indicates that no specific altitude has been provided for a flight operated under visual flight rules.
@@ -132,6 +132,58 @@ func (t *TimeChoiceType) IsValueSet() bool {
 	return t != nil && t.Value != nil
 }
 
+// Additional helper method for TimeChoiceType
+func (t *TimeChoiceType) IsZero() bool {
+	if t == nil {
+		return true
+	}
+	
+	if t.IsValueSet() {
+		return t.Value.IsZero()
+	}
+	
+	if t.IsRangeSet() {
+		// If both earliest and latest are zero or nil
+		if (t.Range.Earliest == nil || t.Range.Earliest.IsZero()) &&
+		   (t.Range.Latest == nil || t.Range.Latest.IsZero()) {
+			return true
+		}
+		return false
+	}
+	
+	return true
+}
+
+// Format method for TimeChoiceType
+func (t *TimeChoiceType) Format() string {
+	if t == nil || t.IsZero() {
+		return "undefined"
+	}
+	
+	if t.IsValueSet() {
+		return t.Value.Format()
+	}
+	
+	if t.IsRangeSet() {
+		result := "Range: "
+		if t.Range.Earliest != nil && !t.Range.Earliest.IsZero() {
+			result += "From " + t.Range.Earliest.Format()
+		} else {
+			result += "From undefined"
+		}
+		
+		if t.Range.Latest != nil && !t.Range.Latest.IsZero() {
+			result += " To " + t.Range.Latest.Format()
+		} else {
+			result += " To undefined"
+		}
+		
+		return result
+	}
+	
+	return "undefined"
+}
+
 // Helper methods for TrueAirspeedChoiceType
 func (t *TrueAirspeedChoiceType) IsRangeSet() bool {
 	return t != nil && t.Range != nil
@@ -139,4 +191,83 @@ func (t *TrueAirspeedChoiceType) IsRangeSet() bool {
 
 func (t *TrueAirspeedChoiceType) IsValueSet() bool {
 	return t != nil && t.Value != nil
+}
+
+// Custom XML marshaling for choice types
+func (c *FlightLevelOrAltitudeChoiceType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	// Handle choice between altitude and flightLevel
+	for {
+		token, err := d.Token()
+		if err != nil {
+			return err
+		}
+
+		switch se := token.(type) {
+		case xml.StartElement:
+			switch se.Name.Local {
+			case "altitude":
+				var alt AltitudeType
+				if err := d.DecodeElement(&alt, &se); err != nil {
+					return err
+				}
+				c.Altitude = &alt
+				c.FlightLevel = nil
+			case "flightLevel":
+				var fl FlightLevelType
+				if err := d.DecodeElement(&fl, &se); err != nil {
+					return err
+				}
+				c.FlightLevel = &fl
+				c.Altitude = nil
+			default:
+				// Skip other elements
+				if err := d.Skip(); err != nil {
+					return err
+				}
+			}
+		case xml.EndElement:
+			if se.Name == start.Name {
+				return nil
+			}
+		}
+	}
+}
+
+func (t *TimeChoiceType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	// Handle choice between range and value
+	for {
+		token, err := d.Token()
+		if err != nil {
+			return err
+		}
+
+		switch se := token.(type) {
+		case xml.StartElement:
+			switch se.Name.Local {
+			case "range":
+				var rng TimeRangeType
+				if err := d.DecodeElement(&rng, &se); err != nil {
+					return err
+				}
+				t.Range = &rng
+				t.Value = nil
+			case "value":
+				var val DateTimeUtcType
+				if err := d.DecodeElement(&val, &se); err != nil {
+					return err
+				}
+				t.Value = &val
+				t.Range = nil
+			default:
+				// Skip other elements
+				if err := d.Skip(); err != nil {
+					return err
+				}
+			}
+		case xml.EndElement:
+			if se.Name == start.Name {
+				return nil
+			}
+		}
+	}
 }

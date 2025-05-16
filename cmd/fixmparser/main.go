@@ -230,7 +230,7 @@ func printFlightInfo(flight *flightdata.FlightType) {
 
 		// Print GUFI if available
 		if flight.FlightIdentification.Gufi != nil {
-			fmt.Printf("GUFI: %v\n", *flight.FlightIdentification.Gufi)
+			fmt.Printf("GUFI: %v\n", flight.FlightIdentification.Gufi)
 		}
 	}
 
@@ -332,8 +332,7 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 		if elem.ElementStartPoint != nil {
 			fmt.Println("    Start Point:")
 
-			// Print aerodrome reference if available
-			// AerodromeReferencePoint is a struct not a pointer, so we need to check fields directly
+			// Check fields in AerodromeReferencePoint directly instead of comparing struct to nil
 			if elem.ElementStartPoint.AerodromeReferencePoint.LocationIndicator != nil {
 				fmt.Printf("      Aerodrome: %s\n", *elem.ElementStartPoint.AerodromeReferencePoint.LocationIndicator)
 
@@ -345,10 +344,9 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 				}
 			}
 
-			// Print navaid if available
-			// Navaid is a struct not a pointer, so we need to check fields directly
-			if elem.ElementStartPoint.Navaid.Designator != nil && *elem.ElementStartPoint.Navaid.Designator != "" {
-				fmt.Printf("      Navaid: %s\n", *elem.ElementStartPoint.Navaid.Designator)
+			// Check fields in Navaid directly
+			if elem.ElementStartPoint.Navaid.Designator != "" {
+				fmt.Printf("      Navaid: %s\n", elem.ElementStartPoint.Navaid.Designator)
 
 				// Print coordinates if available
 				if elem.ElementStartPoint.Navaid.Position != nil &&
@@ -358,10 +356,9 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 				}
 			}
 
-			// Print designated point if available
-			// DesignatedPoint is a struct not a pointer, so we need to check fields directly
-			if elem.ElementStartPoint.DesignatedPoint.Designator != nil && *elem.ElementStartPoint.DesignatedPoint.Designator != "" {
-				fmt.Printf("      Designated Point: %s\n", *elem.ElementStartPoint.DesignatedPoint.Designator)
+			// Check fields in DesignatedPoint directly
+			if elem.ElementStartPoint.DesignatedPoint.Designator != "" {
+				fmt.Printf("      Designated Point: %s\n", elem.ElementStartPoint.DesignatedPoint.Designator)
 
 				// Print coordinates if available
 				if elem.ElementStartPoint.DesignatedPoint.Position != nil &&
@@ -379,14 +376,12 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 			// Print level/altitude with UOM if available
 			if elem.Point4D.Level != nil {
 				if elem.Point4D.Level.IsAltitudeSet() {
-					// For AltitudeType, use direct value without Value field
 					fmt.Printf("      Altitude: %v", *elem.Point4D.Level.Altitude)
-					if elem.Point4D.Level.Altitude.UOM != nil {
-						fmt.Printf(" %s", *elem.Point4D.Level.Altitude.UOM)
+					if elem.Point4D.Level.Altitude.UOM != "" {
+						fmt.Printf(" %s", elem.Point4D.Level.Altitude.UOM)
 					}
 					fmt.Println()
 				} else if elem.Point4D.Level.IsFlightLevelSet() {
-					// For FlightLevelType, use direct value without Value field
 					fmt.Printf("      Flight Level: FL%v\n", *elem.Point4D.Level.FlightLevel)
 				}
 			}
@@ -412,10 +407,9 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 
 			// Print predicted airspeed with UOM
 			if elem.Point4D.PredictedAirspeed != nil {
-				// IndicatedAirspeedType doesn't have Value field, use directly
 				fmt.Printf("      Predicted Airspeed: %v", *elem.Point4D.PredictedAirspeed)
-				if elem.Point4D.PredictedAirspeed.UOM != nil {
-					fmt.Printf(" %s", *elem.Point4D.PredictedAirspeed.UOM)
+				if elem.Point4D.PredictedAirspeed.UOM != "" {
+					fmt.Printf(" %s", elem.Point4D.PredictedAirspeed.UOM)
 				}
 				fmt.Println()
 			}
@@ -442,17 +436,11 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 			if rte.IsOtherRouteDesignatorSet() {
 				fmt.Printf("      Type: %s\n", *rte.OtherRouteDesignator)
 			} else if rte.IsRouteDesignatorSet() {
-				fmt.Printf("      Airway: %s\n", *rte.RouteDesignator)
+				fmt.Printf("      Airway: %s\n", rte.RouteDesignator.Value)
 			} else if rte.IsStandardInstrumentDepartureSet() {
-				// Check if Designator is a string pointer
-				if rte.StandardInstrumentDeparture.Designator != nil {
-					fmt.Printf("      SID: %s\n", *rte.StandardInstrumentDeparture.Designator)
-				}
+				fmt.Printf("      SID: %s\n", rte.StandardInstrumentDeparture.Designator)
 			} else if rte.IsStandardInstrumentArrivalSet() {
-				// Check if Designator is a string pointer
-				if rte.StandardInstrumentArrival.Designator != nil {
-					fmt.Printf("      STAR: %s\n", *rte.StandardInstrumentArrival.Designator)
-				}
+				fmt.Printf("      STAR: %s\n", rte.StandardInstrumentArrival.Designator)
 			}
 		}
 
@@ -467,10 +455,8 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 					fmt.Println("        Level Constraint:")
 					if constraint.Level.Level != nil {
 						if constraint.Level.Level.IsAltitudeSet() {
-							// Use AltitudeType directly as a value
 							fmt.Printf("          Altitude: %v\n", *constraint.Level.Level.Altitude)
 						} else if constraint.Level.Level.IsFlightLevelSet() {
-							// Use FlightLevelType directly as a value
 							fmt.Printf("          Flight Level: FL%v\n", *constraint.Level.Level.FlightLevel)
 						}
 					}
@@ -480,10 +466,7 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 				if constraint.Speed != nil {
 					fmt.Println("        Speed Constraint:")
 					if constraint.Speed.Speed != nil {
-						// Fixed: Use proper type check for Speed.Value
-						if constraint.Speed.Speed.Value != 0 {
-							fmt.Printf("          Speed: %v\n", constraint.Speed.Speed.Value)
-						}
+						fmt.Printf("          Speed: %v\n", *constraint.Speed.Speed)
 					}
 				}
 
@@ -491,7 +474,7 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 				if constraint.Time != nil && constraint.Time.TimeSpecification != nil {
 					fmt.Println("        Time Constraint:")
 
-					// Fixed: Use the IsZero method for TimeSpecification
+					// Use the IsZero method for TimeSpecification
 					if !constraint.Time.TimeSpecification.IsZero() {
 						fmt.Printf("          Time: %s\n", constraint.Time.TimeSpecification.Format())
 					}
@@ -517,14 +500,14 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 			} else if ri.CruisingLevel.IsFlightLevelSet() {
 				fmt.Printf("      Flight Level: FL%v\n", *ri.CruisingLevel.FlightLevel)
 			} else if ri.CruisingLevel.IsVFRSet() {
-				fmt.Printf("      VFR: %s\n", *ri.CruisingLevel.VisualFlightRules)
+				fmt.Printf("      VFR: %s\n", ri.CruisingLevel.VisualFlightRules)
 			}
 		}
 
 		if ri.CruisingSpeed != nil {
 			fmt.Printf("    Cruising Speed: %v", *ri.CruisingSpeed)
-			if ri.CruisingSpeed.UOM != nil {
-				fmt.Printf(" %s", *ri.CruisingSpeed.UOM)
+			if ri.CruisingSpeed.UOM != "" {
+				fmt.Printf(" %s", ri.CruisingSpeed.UOM)
 			}
 			fmt.Println()
 		}
@@ -549,8 +532,8 @@ func printRouteTrajectoryGroup(rtg *flightroutetrajectory.RouteTrajectoryGroupTy
 	// Print takeoff mass
 	if rtg.TakeoffMass != nil {
 		fmt.Printf("\n  Takeoff Mass: %v", rtg.TakeoffMass.Value)
-		if rtg.TakeoffMass.UOM != nil {
-			fmt.Printf(" %s", *rtg.TakeoffMass.UOM)
+		if rtg.TakeoffMass.UOM != "" {
+			fmt.Printf(" %s", rtg.TakeoffMass.UOM)
 		}
 		fmt.Println()
 	}
