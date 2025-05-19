@@ -1,3 +1,88 @@
+
+## To run the code:
+'''
+go run cmd/fixmui/main.go
+
+You will be shown all of the sample data files in the /sample_messages directory, select any one file for processing, process all or exit.
+
+==== FIXM XML Parser ====
+Using Go-generated FIXM schema files
+
+Available FIXM files:
+1. sample_messages/4.3/FF-ICE/example1.xml
+2. sample_messages/4.3/arrival.xml
+3. sample_messages/4.3/departure.xml
+4. sample_messages/4.3/routeinformation.xml
+5. sample_messages/4.3/routetrajectorygroup.xml
+6. sample_messages/4.3/routetrajectorygroup2.xml
+7. sample_messages/4.3/routetrajectorygroup3.xml
+
+Additional options:
+8. Process all files
+9. Exit
+
+Enter choice (1-9): 
+'''
+
+Upon selection you will get an output in the terminal window and as a text file in the /output directory such as follows:
+
+Enter choice (1-9): 6
+
+Processing file: sample_messages/4.3/routetrajectorygroup2.xml
+Found RouteTrajectoryGroup element in document
+
+Route Trajectory Information:
+DEBUG: In printRouteTrajectoryGroupInfo
+Desired Route:
+  Route Trajectory Details:
+
+  Element 0:
+    AlongRouteDistance: {0 NM}
+    Start Point:
+      Aerodrome: KHGR
+      Position: Lat 39.708611, Lon -77.726389
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 1:
+    AlongRouteDistance: {6.12 NM}
+    Start Point:
+      Navaid: HGR
+      Position: Lat 39.697778, Lon -77.855833
+    Route to Next Element:
+      Airway: V268
+
+  Element 2:
+    AlongRouteDistance: {34.48 NM}
+    Start Point:
+      Designated Point: KEMAR
+      Position: Lat 39.562500, Lon -77.267222
+    Route to Next Element:
+      Airway: V268
+
+  Element 3:
+    AlongRouteDistance: {48.67 NM}
+    Start Point:
+      Navaid: EMI
+      Position: Lat 39.495000, Lon -76.978611
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 4:
+    AlongRouteDistance: {72.47 NM}
+    Start Point:
+      Aerodrome: KBWI
+      Position: Lat 39.175833, Lon -76.668889
+DEBUG: Exiting printRouteTrajectoryGroupInfo
+
+Output saved to output/routetrajectorygroup2_output.txt
+
+Press Enter to exit...
+
+
+
+
+
 FIXM Schema to Go Code Conversion: Issues and Solutions
 
 Summary

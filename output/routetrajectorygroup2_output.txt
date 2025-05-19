@@ -1,0 +1,45 @@
+Found RouteTrajectoryGroup element in document
+
+Route Trajectory Information:
+DEBUG: In printRouteTrajectoryGroupInfo
+Desired Route:
+  Route Trajectory Details:
+
+  Element 0:
+    AlongRouteDistance: {0 NM}
+    Start Point:
+      Aerodrome: KHGR
+      Position: Lat 39.708611, Lon -77.726389
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 1:
+    AlongRouteDistance: {6.12 NM}
+    Start Point:
+      Navaid: HGR
+      Position: Lat 39.697778, Lon -77.855833
+    Route to Next Element:
+      Airway: V268
+
+  Element 2:
+    AlongRouteDistance: {34.48 NM}
+    Start Point:
+      Designated Point: KEMAR
+      Position: Lat 39.562500, Lon -77.267222
+    Route to Next Element:
+      Airway: V268
+
+  Element 3:
+    AlongRouteDistance: {48.67 NM}
+    Start Point:
+      Navaid: EMI
+      Position: Lat 39.495000, Lon -76.978611
+    Route to Next Element:
+      Type: DIRECT
+
+  Element 4:
+    AlongRouteDistance: {72.47 NM}
+    Start Point:
+      Aerodrome: KBWI
+      Position: Lat 39.175833, Lon -76.668889
+DEBUG: Exiting printRouteTrajectoryGroupInfo
