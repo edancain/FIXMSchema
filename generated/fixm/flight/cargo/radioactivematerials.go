@@ -3,7 +3,7 @@
 package cargo
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // The dimensionless number (rounded up to the next tenth) assigned to and placed on the label of a fissile material package to designate the degree of control of accumulation of packages containing fissile material during transportation.

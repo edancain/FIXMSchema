@@ -3,7 +3,7 @@
 package cargo
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // Describes whether the shipment is packed to comply with the limitations prescribed for passenger and cargo aircraft or the limitations for cargo aircraft only.

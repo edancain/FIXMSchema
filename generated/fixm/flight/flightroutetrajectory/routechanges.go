@@ -3,7 +3,7 @@
 package flightroutetrajectory
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // Provides an indication of whether the profile constraint is met or initiated at the Location

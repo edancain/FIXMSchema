@@ -3,7 +3,7 @@
 package flightroutetrajectory
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // Identifies whether the constraint is applicable on climb or descent.  This provides an indication of which constraints take priority in the event of conflict when establishing 

@@ -3,7 +3,7 @@
 package capability
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // A code indicating the capability of the aircraft and associated flight crew qualifications to communicate with ATS units. [FIXM]

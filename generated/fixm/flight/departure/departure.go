@@ -3,8 +3,8 @@
 package departure
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/flightroutetrajectory"
 )
 
 // Identifies a flight that has filed its flight plan while in the air, beginning its route description from a specified point en-route, and therefore may not have provided a departure aerodrome.

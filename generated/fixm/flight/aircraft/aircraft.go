@@ -3,8 +3,8 @@
 package aircraft
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/capability"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/capability"
 )
 
 // A unique combination of twenty-four bits available for assignment to an aircraft for the purpose of air-ground communications, navigation and surveillance. [ICAO Doc 4444]

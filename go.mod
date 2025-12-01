@@ -1,4 +1,4 @@
-module github.com/edancain/FIXMSchema.git
+module github.com/edancain/FIXMSchema
 
 go 1.23.2
 

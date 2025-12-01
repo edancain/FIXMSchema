@@ -3,7 +3,7 @@
 package enroute
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // Specifies whether the boundary crossing occurs at or above or at or below the specified level.

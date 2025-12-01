@@ -4,7 +4,7 @@
 package flightroutetrajectory
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // The regulation, or combination of regulations, that governs all aspects of operations under which the pilot plans to fly.

@@ -3,14 +3,14 @@
 package flightdata
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/aircraft"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/arrival"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/cargo"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/departure"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/emergency"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/enroute"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/aircraft"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/arrival"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/cargo"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/departure"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/emergency"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/enroute"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/flightroutetrajectory"
 )
 
 // Up to four-digit commercial flight number. [FIXM]

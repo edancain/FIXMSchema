@@ -3,7 +3,7 @@
 package emergency
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // A generic term meaning, as the case may be, uncertainty phase, alert phase or distress phase. [ICAO Annex 11]

@@ -3,8 +3,8 @@
 package arrival
 
 import (
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
-	"github.com/edancain/FIXMSchema.git/generated/fixm/flight/flightroutetrajectory"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/flight/flightroutetrajectory"
 )
 
 // The type of arrival time represented. [FIXM]

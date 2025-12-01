@@ -5,7 +5,7 @@ import (
 	"encoding/xml"
 	"strconv"
 
-	"github.com/edancain/FIXMSchema.git/generated/fixm/base"
+	"github.com/edancain/FIXMSchema/generated/fixm/base"
 )
 
 // ExtendedRouteTrajectoryElementType extends the generated type
